@@ -1,0 +1,14 @@
+{
+    "name": "robin.troyer/imdb",
+    "type": "project",
+    "authors": [
+        {
+            "name": "robintroyer",
+            "email": "62710623+robintroyer@users.noreply.github.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "classmap": ["models/"]
+    }
+}
