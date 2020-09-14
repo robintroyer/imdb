@@ -23,7 +23,19 @@ class Database implements StorageInterface
     }
     public function getPersons()
     {
-        
+        $sql = "SELECT `name`, bio
+        FROM persons";
+        $persons = [];
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $person = new Person();
+                $person->setName($row['name']);
+                $person->setBio($row['bio']);
+                $persons[] = $person;
+            }
+        }
+        return $persons;
     }
     public function getMovies()
     {

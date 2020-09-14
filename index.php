@@ -1,4 +1,5 @@
 <?php
+// echo '<script src="script.js"></script>';
 $storage = new Database();
 $configDB = new stdClass();
 $configDB->host = $DB_HOST;
@@ -10,3 +11,4 @@ $form = new Form($storage);
 $view = new View();
 
 $form->newPerson();
+$form->newMovie();
