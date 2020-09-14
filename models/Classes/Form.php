@@ -27,7 +27,7 @@ class Form
         $persons = $this->storage->getPersons();
         $title = '<input type="text" name="title">';
 
-        $submit = '<input id="submit" type="submit">';
+        $submit = '<input id="submit" type="submit" name="submit">';
         $new_actor = '<input type="submit" name="new_actor" value="Neuer Schauspieler">';
 
         echo '<form id="form" method="post"><strong>Neuen Film anlegen</strong><br />Titel:<br />' . $title . '<br />';
@@ -48,7 +48,7 @@ class Form
         echo '<script type="text/javascript">
             $(document).ready(function() {
                 $("#add").click(function() {
-                    $("#form").append("<br /><select>' . $option_string . '</select>");
+                    $("#form select:last").after("<br /><select name=\'select\'>' . $option_string . '</select>");
                 })
             });
         </script>';
@@ -60,9 +60,16 @@ class Form
             echo '<option value="' . $person->getName() . '">' . $person->getName() . '</option>';
         }
         
-        echo '</select></form><br />';
+        // echo '</select></form><br />';
+        echo '</select><br />';
+        // echo '<form method="post">';
         echo '<button type="button" name="add" id="add">Neuer Schauspieler</button><br />';
         echo $submit . '</form>';
+
+        if (isset($_POST['submit'])) {
+            echo 'b';
+            print_r($_POST['select']);
+        }
 
         
         
