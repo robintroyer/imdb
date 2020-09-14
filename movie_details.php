@@ -6,25 +6,32 @@ if (is_readable(__DIR__ . '/config.php')) {
 }
 session_start();
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/index.php';
+
+$storage = new Database();
+$configDB = new stdClass();
+$configDB->host = $DB_HOST;
+$configDB->user = $DB_USER;
+$configDB->pass = $DB_PASS;
+$configDB->name = $DB_NAME;
+$storage->initialize($configDB);
+$form = new Form($storage);
+$view = new View($storage);
+
+
+// $this->storage->getSingleMovie($)
+// echo $_GET['title'];
+$movie = $storage->getSingleMovie($_GET['id']);
+print_r($movie);
 
 
 ?>
+
 <!doctype html>
-    <html lang="en">
+    <html>
         <head>
-            <!-- <script src="script.js"></script> -->
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-            <title>IMDB</title>
-            <style type="text/css">
-                .details {
-                    float: right;
-                }
-            </style>
         </head>
         <body>
-            
+            <button onclick="history.go(-1)">Zurück</button>
         </body>
     </html>

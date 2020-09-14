@@ -25,16 +25,18 @@ class Form
     public function newMovie()
     {
         $persons = $this->storage->getPersons();
+        // print_r($persons);
+
         $title = '<input type="text" name="title">';
 
         $submit = '<input id="submit" type="submit" name="submit">';
-        $new_actor = '<input type="submit" name="new_actor" value="Neuer Schauspieler">';
+        // $new_actor = '<input type="submit" name="new_actor" value="Neuer Schauspieler">';
 
         echo '<form id="form" method="post"><strong>Neuen Film anlegen</strong><br />Titel:<br />' . $title . '<br />';
         echo '<label for="director">Regisseur</label><br />';
         echo '<select name="director">';
         foreach ($persons as $person) {
-            echo '<option value="' . $person->getName() . '">' . $person->getName() . '</option>';
+            echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
         }
         echo '</select><br />';
         echo '<label for="actor">Schauspieler</label><br />';
@@ -42,33 +44,36 @@ class Form
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
         $option_string = '';
         foreach ($persons as $person) {
-            $option_string .= '<option value\'' . $person->getname() . '\'>' . $person->getName() . '</option>';
+            $option_string .= '<option value=\'' . $person->getID() . '\'>' . $person->getName() . '</option>';
         }
         
         echo '<script type="text/javascript">
             $(document).ready(function() {
                 $("#add").click(function() {
-                    $("#form select:last").after("<br /><select name=\'select\'>' . $option_string . '</select>");
+                    $("#form select:last").after("<br /><select name=\'actors[]\'>' . $option_string . '</select>");
                 })
             });
         </script>';
 
         
         
-        echo '<select name="actor">';
+        echo '<select name="actors[]">';
         foreach ($persons as $person) {
-            echo '<option value="' . $person->getName() . '">' . $person->getName() . '</option>';
+            echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
         }
         
-        // echo '</select></form><br />';
         echo '</select><br />';
-        // echo '<form method="post">';
         echo '<button type="button" name="add" id="add">Neuer Schauspieler</button><br />';
         echo $submit . '</form>';
 
         if (isset($_POST['submit'])) {
-            echo 'b';
-            print_r($_POST['select']);
+            // print_r($_POST['actors']);
+            $movie = new Movie();
+            $movie->setTitle($_POST['title']);
+            $movie->setDirector($_POST['director']);
+            // print_r($_POST);
+            // $movie->setActors($_POST['actors']);
+            $this->storage->saveMovie($movie, $_POST['actors']);
         }
 
         
