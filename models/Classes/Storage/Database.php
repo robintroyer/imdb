@@ -90,4 +90,32 @@ class Database implements StorageInterface
         return $movie;
 
     }
+
+    public function getActorsOfMovie($movie)
+    {
+        // $sql = "SELECT id, `name`, bio   
+        // FROM persons
+        // JOIN movies_cast ON persons.id = movies_cast.actor_id
+        // JOIN movies ON movies_cast.movie_id = movies.id";
+        // WHERE movies.id = '$movie'
+
+        $sql = "SELECT persons.id, persons.name, persons.bio
+        FROM (persons INNER JOIN movies_cast ON persons.id = movies_cast.actor_id) INNER JOIN movies ON movies_cast.movie_id = movies.id
+        WHERE (((movies.id)='$movie'));
+        ";
+
+        $result = $this->conn->query($sql);
+        // print_r($result);
+        if ($result->num_rows > 0) {
+            $persons = [];
+            while ($row = $result->fetch_assoc()) {
+                $person = new Person();
+                $person->setID($row['id']);
+                $person->setName($row['name']);
+                $person->setBio($row['bio']);
+                $persons[] = $person;
+            }
+        }
+        return $persons;
+    }
 }

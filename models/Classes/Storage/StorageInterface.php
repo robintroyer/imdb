@@ -8,4 +8,5 @@ interface StorageInterface
     public function getMovies();
     public function getSinglePerson($id);
     public function getSingleMovie($id);
+    public function getActorsOfMovie($movie);
 }

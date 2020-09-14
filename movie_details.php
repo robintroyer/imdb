@@ -21,8 +21,16 @@ $view = new View($storage);
 // $this->storage->getSingleMovie($)
 // echo $_GET['title'];
 $movie = $storage->getSingleMovie($_GET['id']);
-print_r($movie);
-
+// print_r($movie);
+echo '<h1>' . $movie->getTitle() . '</h1>';
+$actors = $storage->getActorsOfMovie($_GET['id']);
+// print_r($actors);
+echo '<ul class="list-group">';
+foreach ($actors as $actor) {
+    // echo '<li class="list-group-item>' . $actor->getName() . '</li>';
+    echo '<li class="list-group-item">' . $actor->getName() . '</li>';
+}
+echo '</ul>';
 
 ?>
 
