@@ -66,4 +66,119 @@ class View
         // echo $id;
         header('location:/imdb/movie_details.php/?id=' . $_POST['details_id'] . '&title=' . $_POST['details_title'] . '&type=' . $_POST['type']);
     }
+    public function showPersonDetails()
+    {
+        // header('location:/imdb/person_details.php');
+
+        if (isset($_POST['person_details'])) {
+            header('location:/imdb/person_details.php?id=' . $_POST['person_details_id'] . '&name=' . $_POST['person_details_name']);
+        } elseif (isset($_POST['director_details'])) {
+            header('location:/imdb/person_details.php?id=' . $_POST['director_details_id'] . '&name=' . $_POST['director    _details_name']);
+        }
+
+
+    }
+    public function personDetailsPage()
+    {
+        $details = $this->storage->getSinglePerson($_GET['id']);
+        $movies = $this->storage->getMoviesOfPerson($_GET['id']);
+        $series = $this->storage->getSeriesOfPerson($_GET['id']);
+        $directed_movies = $this->storage->getDirectedMoviesOfPerson($_GET['id']);
+        $directed_series = $this->storage->getDirectedSeriesOfPerson($_GET['id']);
+
+        print_r($details);
+        print_r($movies);
+        print_r($series);
+        print_r($directed_movies);
+        print_r($directed_series);
+
+        echo '<h1>' . $details->getName() . '</h1>';
+        echo '<h3>Biografie</h3>';
+        echo '<p>' . $details->getBio() . '</p>';
+        if (!empty($movies)) {
+            echo '<h4>Filme</h4>';
+            echo '<ul class="list-group">';
+            foreach ($movies as $movie) {
+                echo '<form method="post">';
+                echo '<li class="list-group-item">' . $movie->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '</form>';
+            }
+            echo '</ul>';
+        }
+        if (!empty($series)) {
+            echo '<h4>Serien</h4>';
+            echo '<ul class="list-group">';
+            foreach ($series as $s) {
+                echo '<form method="post">';
+                echo '<li class="list-group-item">' . $s->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '</form>';
+            }
+            echo '</ul>';
+        }
+        if (!empty($directed_movies)) {
+            echo '<h4>Regisseur in folgenden Filmen</h4>';
+            echo '<ul class="list-group">';
+            foreach ($directed_movies as $directed_movie) {
+                echo '<form method="post">';
+                echo '<li class="list-group-item">' . $directed_movie->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '</form>';
+            }
+            echo '</ul>';
+        }
+        if (!empty($directed_series)) {
+            echo '<h4>Regisseur in folgenden Serien</h4>';
+            echo '<ul class="list-group">';
+            foreach ($directed_series as $directed_s) {
+                echo '<form method="post">';
+                echo '<li class="list-group-item">' . $directed_s->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '</form>';
+            }
+            echo '</ul>';
+        }
+    }
+    public function detailsPage()
+    {
+        if ($_GET['type'] == 'movie') {
+            $details = $this->storage->getSingleMovie($_GET['id']);
+            $actors = $this->storage->getActorsOfMovie($_GET['id']);
+            $directors = $this->storage->getDirectorsOfMovie($_GET['id']);
+        } elseif ($_GET['type'] == 'series') {
+            $details = $this->storage->getSingleSeries($_GET['id']);
+            $actors = $this->storage->getActorsOfSeries($_GET['id']);
+            $directors = $this->storage->getDirectorsOfSeries($_GET['id']);
+        }
+        
+        echo '<h1>' . $details->getTitle() . '</h1>';
+        echo '<ul class="list-group">';
+        foreach ($actors as $actor) {
+            echo '<form method="post">';
+            echo '<li class="list-group-item">' . $actor->getName()
+            . '<input name="person_details" type="submit" style="float:right;">
+            <input name="person_details_id" value="' . $actor->getID() . '" type="hidden" style="float:right;">
+            <input name="person_details_name" value="' . $actor->getName() . '" type="hidden" style="float:right;">
+            <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;"></li>';
+            echo '</form>';
+        }
+        echo '</ul>';
+        echo '<br />';
+        echo '<h3>Regisseur/Produzent</h3>';
+        echo '<ul class="list-group">';
+        foreach ($directors as $director) {
+            echo '<form method="post">';
+            echo '<li class="list-group-item">' . $director->getName()
+            . '<input name="director_details" type="submit" style="float:right;">
+            <input name="director_details_id" value="' . $director->getID() . '" type="hidden" style="float:right;">
+            <input name="director_details_name" value="' . $director->getName() . '" type="hidden" style="float:right;">
+            <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;"></li>';
+            echo '</form>';
+        }
+        echo '</ul>';
+
+        if (
+            isset($_POST['person_details'])
+            || isset($_POST['director_details'])
+        ) {
+            $this->showPersonDetails();
+        }
+    }
 }

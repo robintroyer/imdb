@@ -113,7 +113,19 @@ class Database implements StorageInterface
     }
     public function getSinglePerson($id)
     {
-        
+        $sql = "SELECT id, `name`, bio
+        FROM persons
+        WHERE id = '$id'";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $actor = new Person();
+                $actor->setID($row['id']);
+                $actor->setName($row['name']);
+                $actor->setBio($row['bio']);
+            }
+        }
+        return $actor;
     }
     public function getSingleMovie($id)
     {
@@ -222,5 +234,85 @@ class Database implements StorageInterface
             }
         }
         return $directors;
+    }
+    public function getMoviesOfPerson($id)
+    {
+        $sql = "SELECT movies.id, movies.title
+        FROM (movies INNER JOIN movies_cast ON movies.id = movies_cast.movie_id)
+        INNER JOIN persons ON movies_cast.actor_id = persons.id
+        WHERE (((persons.id)='$id'))";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $movies = [];
+            while ($row = $result->fetch_assoc()) {
+                $movie = new Movie();
+                $movie->setID($row['id']);
+                $movie->setTitle($row['title']);
+                $movies[] = $movie;
+            }
+        }
+        if (isset($movies)) {
+            return $movies;
+        }
+    }
+    public function getSeriesOfPerson($id)
+    {
+        $sql = "SELECT series.id, series.title
+        FROM (series INNER JOIN series_cast ON series.id = series_cast.series_id)
+        INNER JOIN persons ON series_cast.actor_id = persons.id
+        WHERE (((persons.id)='$id'))";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $series_array = [];
+            while ($row = $result->fetch_assoc()) {
+                $series = new Series();
+                $series->setID($row['id']);
+                $series->setTitle($row['title']);
+                $series_array[] = $series;
+            }
+        }
+        if (isset($series_array)) {
+            return $series_array;
+        }
+    }
+    public function getDirectedMoviesOfPerson($id)
+    {
+        $sql = "SELECT movies.id, movies.title
+        FROM (movies INNER JOIN movies_directors ON movies.id = movies_directors.movie_id)
+        INNER JOIN persons ON movies_directors.director_id = persons.id
+        WHERE (((persons.id)='$id'))";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $movies = [];
+            while ($row = $result->fetch_assoc()) {
+                $movie = new Movie();
+                $movie->setID($row['id']);
+                $movie->setTitle($row['title']);
+                $movies[] = $movie;
+            }
+        }
+        if (isset($movies)) {
+            return $movies;
+        }
+    }
+    public function getDirectedSeriesOfPerson($id)
+    {
+        $sql = "SELECT series.id, series.title
+        FROM (series INNER JOIN series_directors ON series.id = series_directors.series_id)
+        INNER JOIN persons ON series_directors.director_id = persons.id
+        WHERE (((persons.id)='$id'))";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $series_array = [];
+            while ($row = $result->fetch_assoc()) {
+                $series = new Series();
+                $series->setID($row['id']);
+                $series->setTitle($row['title']);
+                $series_array[] = $series;
+            }
+        }
+        if (isset($series_array)) {
+            return $series_array;
+        }
     }
 }

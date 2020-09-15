@@ -17,9 +17,9 @@ $storage->initialize($configDB);
 $form = new Form($storage);
 $view = new View($storage);
 
-$view->detailsPage();
-
+$view->personDetailsPage();
 ?>
+
 
 <!doctype html>
     <html>
