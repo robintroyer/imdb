@@ -10,6 +10,7 @@ class Database implements StorageInterface
         }
 
         
+        
     }
     public function savePerson($person)
     {
@@ -19,7 +20,7 @@ class Database implements StorageInterface
             echo 'Record added successfully';
         }
     }
-    public function saveMovie($movie, $actors)
+    public function saveMovie($movie, $actors, $directors)
     {
         $sql = "INSERT INTO movies (title, director)
         VALUES ('" . $movie->getTitle() . "', '" . $movie->getDirector() . "')";
@@ -30,6 +31,21 @@ class Database implements StorageInterface
         foreach ($actors as $actor) {
             $sql = "INSERT INTO movies_cast
             VALUES ('" . $actor . "', '$movie_id')";
+            $this->conn->query($sql);
+        }
+    }
+    public function saveSeries($series, $actors, $directors)
+    {
+        print_r($series);
+        print_r($actors);
+        print_r($directors);
+        $sql = "INSERT INTO series (title)
+        VALUES ('" . $series->getTitle() . "')";
+        $this->conn->query($sql);
+        $series_id = $this->conn->insert_id;
+        foreach ($actors as $actor) {
+            $sql = "INSERT INTO series_cast
+            VALUES ('$actor', '$series_id')";
             $this->conn->query($sql);
         }
     }
@@ -68,6 +84,23 @@ class Database implements StorageInterface
         }
         return $movies;
     }
+    public function getSeries()
+    {
+        $sql = "SELECT *
+        FROM series";
+
+        $series_array = [];
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $series = new Series();
+                $series->setID($row['id']);
+                $series->setTitle($row['title']);
+                $series_array[] = $series;
+            }
+        }
+        return $series_array;
+    }
     public function getSinglePerson($id)
     {
         
@@ -84,13 +117,25 @@ class Database implements StorageInterface
                 $movie->setID($row['id']);
                 $movie->setTitle($row['title']);
                 $movie->setDirector($row['director']);
-
             }
         }
         return $movie;
 
     }
-
+    public function getSingleSeries($id)
+    {
+        $sql = "SELECT *
+        FROM series
+        WHERE id = '$id'";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $series = new Series();
+                $series->setID($row['id']);
+                $series->setTitle($row['title']);
+            }
+        }
+    }
     public function getActorsOfMovie($movie)
     {
         // $sql = "SELECT id, `name`, bio   
@@ -117,5 +162,23 @@ class Database implements StorageInterface
             }
         }
         return $persons;
+    }
+    public function getActorsOfSeries($series)
+    {
+        $sql = "SELECT persons.id, persons.name, persons.bio
+        FROM (persons INNER JOIN series_cast ON persons.id = series_cast.actor_id) INNER JOIN series ON series_cast.series_id = series.id
+        WHERE (((series.id)='$series'))";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $actors = [];
+            while ($row = $result->fetch_assoc()) {
+                $actor = new Person();
+                $actor->setID($row['id']);
+                $actor->setName($row['name']);
+                $actor->setBio($row['bio']);
+                $actors[] = $actor;
+            }
+        }
+        return $actors;
     }
 }

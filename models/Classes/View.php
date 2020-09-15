@@ -6,7 +6,40 @@ class View
     {
         $this->storage = $storage;
     }
-    public function showMovies($movies)
+
+    public function showButtons($movies, $series)
+    {
+        echo '<form method="post">';
+        echo '<div class="btn-group" role="group" aria-label="Basic example">
+                <input type="submit" name="button_movie" value="Filme" class="btn btn-secondary">
+                <input type="submit" name="button_series" value="Serien" class="btn btn-secondary">
+              </div>';
+        echo '</form>';
+
+        if (isset($_POST['button_movie'])) {
+            $this->showMovies($movies);
+        } elseif (isset($_POST['button_series'])) {
+            $this->showSeries($series);
+        }
+    }
+    private function showSeries($series)
+    {
+        print_r($series);
+        echo '<ul class="list-group">';
+        foreach ($series as $s) {
+            echo '<form method="post">';
+            echo '<li class="list-group-item">' . $s->getTitle()
+            . '<input class="details" type="submit" name="details" value="Details">
+            <input type="hidden" name="details_id" value="' . $s->getID() . '">
+            <input type="hidden" name="details_title" value="' . $s->getTitle() . '"></li>';
+            echo '</form>';
+        }
+        echo '</ul>';
+        if (isset($_POST['details'])) {
+            $this->showDetails();
+        }
+    }
+    private function showMovies($movies)
     {
         // echo '<form method="post"><ul class="list-group">';
         echo '<ul class="list-group">';

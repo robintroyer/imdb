@@ -13,5 +13,6 @@ $view = new View($storage);
 $form->newPerson();
 $form->newMovie();
 // print_r($storage->getMovies());
-$view->showMovies($storage->getMovies());
+$view->showButtons($storage->getMovies(), $storage->getSeries());
+// $view->showMovies($storage->getMovies());
 
