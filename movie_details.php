@@ -20,15 +20,29 @@ $view = new View($storage);
 
 // $this->storage->getSingleMovie($)
 // echo $_GET['title'];
-$movie = $storage->getSingleMovie($_GET['id']);
-// print_r($movie);
-echo '<h1>' . $movie->getTitle() . '</h1>';
-$actors = $storage->getActorsOfMovie($_GET['id']);
-// print_r($actors);
+
+if ($_GET['type'] == 'movie') {
+    $details = $storage->getSingleMovie($_GET['id']);
+    $actors = $storage->getActorsOfMovie($_GET['id']);
+    $directors = $storage->getDirectorsOfMovie($_GET['id']);
+} elseif ($_GET['type'] == 'series') {
+    $details = $storage->getSingleSeries($_GET['id']);
+    $actors = $storage->getActorsOfSeries($_GET['id']);
+    $directors = $storage->getDirectorsOfSeries($_GET['id']);
+}
+
+
+echo '<h1>' . $details->getTitle() . '</h1>';
 echo '<ul class="list-group">';
 foreach ($actors as $actor) {
-    // echo '<li class="list-group-item>' . $actor->getName() . '</li>';
     echo '<li class="list-group-item">' . $actor->getName() . '</li>';
+}
+echo '</ul>';
+echo '<br />';
+echo '<h3>Regisseur/Produzent</h3>';
+echo '<ul class="list-group">';
+foreach ($directors as $director) {
+    echo '<li class="list-group-item">' . $director->getName() . '</li>';
 }
 echo '</ul>';
 

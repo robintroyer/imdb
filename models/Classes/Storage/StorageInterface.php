@@ -13,4 +13,6 @@ interface StorageInterface
     public function getSingleSeries($id);
     public function getActorsOfMovie($movie);
     public function getActorsOfSeries($series);
+    public function getDirectorsOfMovie($movie);
+    public function getDirectorsOfSeries($series);
 }

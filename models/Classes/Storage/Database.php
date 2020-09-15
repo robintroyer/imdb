@@ -33,6 +33,11 @@ class Database implements StorageInterface
             VALUES ('" . $actor . "', '$movie_id')";
             $this->conn->query($sql);
         }
+        foreach ($directors as $director) {
+            $sql = "INSERT INTO movies_directors
+            VALUES ('$director', '$movie_id')";
+            $this->conn->query($sql);
+        }
     }
     public function saveSeries($series, $actors, $directors)
     {
@@ -46,6 +51,11 @@ class Database implements StorageInterface
         foreach ($actors as $actor) {
             $sql = "INSERT INTO series_cast
             VALUES ('$actor', '$series_id')";
+            $this->conn->query($sql);
+        }
+        foreach ($directors as $director) {
+            $sql = "INSERT INTO series_directors
+            VALUES ('$director', '$series_id')";
             $this->conn->query($sql);
         }
     }
@@ -135,20 +145,14 @@ class Database implements StorageInterface
                 $series->setTitle($row['title']);
             }
         }
+        return $series;
     }
     public function getActorsOfMovie($movie)
     {
-        // $sql = "SELECT id, `name`, bio   
-        // FROM persons
-        // JOIN movies_cast ON persons.id = movies_cast.actor_id
-        // JOIN movies ON movies_cast.movie_id = movies.id";
-        // WHERE movies.id = '$movie'
-
         $sql = "SELECT persons.id, persons.name, persons.bio
         FROM (persons INNER JOIN movies_cast ON persons.id = movies_cast.actor_id) INNER JOIN movies ON movies_cast.movie_id = movies.id
         WHERE (((movies.id)='$movie'));
         ";
-
         $result = $this->conn->query($sql);
         // print_r($result);
         if ($result->num_rows > 0) {
@@ -180,5 +184,43 @@ class Database implements StorageInterface
             }
         }
         return $actors;
+    }
+    public function getDirectorsOfMovie($movie)
+    {
+        $sql = "SELECT persons.id, persons.name, persons.bio
+        FROM (persons INNER JOIN movies_directors ON persons.id = movies_directors.director_id)
+        INNER JOIN movies ON movies_directors.movie_id = movies.id
+        WHERE (((movies.id)='$movie'))";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $directors = [];
+            while ($row = $result->fetch_assoc()) {
+                $director = new Person();
+                $director->setID($row['id']);
+                $director->setName($row['name']);
+                $director->setBio($row['bio']);
+                $directors[] = $director;
+            }
+        }
+        return $directors;
+    }
+    public function getDirectorsOfSeries($series)
+    {
+        $sql = "SELECT persons.id, persons.name, persons.bio
+        FROM (persons INNER JOIN series_directors ON persons.id = series_directors.director_id)
+        INNER JOIN series ON series_directors.series_id = series_id
+        WHERE (((series.id)='$series'))";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $directors = [];
+            while ($row = $result->fetch_assoc()) {
+                $director = new Person();
+                $director->setID($row['id']);
+                $director->setName($row['name']);
+                $director->setBio($row['bio']);
+                $directors[] = $director;
+            }
+        }
+        return $directors;
     }
 }

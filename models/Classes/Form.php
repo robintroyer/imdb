@@ -36,11 +36,11 @@ class Form
 
         echo '<form id="form" method="post"><strong>Film/Serie anlegen</strong><br />';
         echo '<div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="checkbox_movie" id="inlineRadio1" value="movie">
+                <input class="form-check-input" type="radio" name="radio" id="inlineRadio1" value="movie">
                 <label class="form-check-label" for="inlineRadio1">Film</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="checkbox_series" id="inlineRadio2" value="series">
+                <input class="form-check-input" type="radio" name="radio" id="inlineRadio2" value="series">
                 <label class="form-check-label" for="inlineRadio2">Serie</label>
             </div><br />';
         echo 'Titel:<br />' . $title . '<br />';
@@ -92,14 +92,16 @@ class Form
                 && !empty($_POST['directors'])
                 && !empty($_POST['actors'])
             ) {
-                if (isset($_POST['checkbox_movie'])) {
-                    $movie = new Movie();
-                    $movie->setTitle($_POST['title']);
-                    $this->storage->saveMovie($movie, $_POST['actors'], $_POST['directors']);    
-                } elseif (isset($_POST['checkbox_series'])) {
-                    $series = new Series();
-                    $series->setTitle($_POST['title']);
-                    $this->storage->saveSeries($series, $_POST['actors'], $_POST['directors']);
+                if (isset($_POST['radio'])) {
+                    if ($_POST['radio'] == 'movie') {
+                        $movie = new Movie();
+                        $movie->setTitle($_POST['title']);
+                        $this->storage->saveMovie($movie, $_POST['actors'], $_POST['directors']); 
+                    } elseif ($_POST['radio'] == 'series') {
+                        $series = new Series();
+                        $series->setTitle($_POST['title']);
+                        $this->storage->saveSeries($series, $_POST['actors'], $_POST['directors']);
+                    }
                 }
             }
         }
