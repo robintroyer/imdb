@@ -100,7 +100,11 @@ class View
             echo '<ul class="list-group">';
             foreach ($movies as $movie) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $movie->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '<li class="list-group-item">' . $movie->getTitle()
+                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                <input type="hidden" name="entry_details_id" value="' . $movie->getID() . '">
+                <input type="hidden" name="entry_details_title" value="' . $movie->getTitle() . '">
+                <input type="hidden" name="entry_type" value="movie"></li>';
                 echo '</form>';
             }
             echo '</ul>';
@@ -110,7 +114,11 @@ class View
             echo '<ul class="list-group">';
             foreach ($series as $s) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $s->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '<li class="list-group-item">' . $s->getTitle()
+                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                <input type="hidden" name="entry_details_id" value="' . $s->getID() . '">
+                <input type="hidden" name="entry_details_title" value="' . $s->getTitle() . '">
+                <input type="hidden" name="entry_type" value="series"></li>';
                 echo '</form>';
             }
             echo '</ul>';
@@ -120,7 +128,11 @@ class View
             echo '<ul class="list-group">';
             foreach ($directed_movies as $directed_movie) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $directed_movie->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '<li class="list-group-item">' . $directed_movie->getTitle()
+                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                <input type="hidden" name="entry_details_id" value="' . $directed_movie->getID() . '">
+                <input type="hidden" name="entry_details_title" value="' . $directed_movie->getTitle() . '">
+                <input type="hidden" name="entry_type" value="movie"></li>';
                 echo '</form>';
             }
             echo '</ul>';
@@ -130,10 +142,17 @@ class View
             echo '<ul class="list-group">';
             foreach ($directed_series as $directed_s) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $directed_s->getTitle() . '<input value="Details" type="submit" style="float:right;"></li>';
+                echo '<li class="list-group-item">' . $directed_s->getTitle()
+                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                <input type="hidden" name="entry_details_id" value="' . $directed_s->getID() . '">
+                <input type="hidden" name="entry_details_title" value="' . $directed_s->getTitle() . '">
+                <input type="hidden" name="entry_type" value="series"></li>';
                 echo '</form>';
             }
             echo '</ul>';
+        }
+        if (isset($_POST['entry_details'])) {
+            header('location:/imdb/movie_details.php/?id=' . $_POST['entry_details_id'] . '&title=' . $_POST['entry_details_title'] . '&type=' . $_POST['entry_type']);
         }
     }
     public function detailsPage()

@@ -15,6 +15,7 @@ $form->newMovie();
 // print_r($storage->getMovies());
 $view->showButtons($storage->getMovies(), $storage->getSeries());
 if (isset($_POST['details'])) {
+    echo 'a';
     $view->showDetails();
 }
 // $view->showMovies($storage->getMovies());
