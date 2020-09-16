@@ -111,6 +111,52 @@ class Database implements StorageInterface
         }
         return $series_array;
     }
+    public function getActors()
+    {
+        $sql = "SELECT persons.id, persons.name, persons.bio
+        FROM persons INNER JOIN movies_cast ON persons.id = movies_cast.actor_id
+        UNION
+        SELECT persons.id, persons.name, persons.bio
+        FROM persons INNER JOIN series_cast ON persons.id = series_cast.actor_id";
+
+        $result = $this->conn->query($sql);
+        // print_r($result);
+        $actors = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $actor = new Person();
+                $actor->setID($row['id']);
+                $actor->setName($row['name']);
+                $actor->setBio($row['bio']);
+                $actors[] = $actor;
+            }
+        }
+
+
+        // print_r($actors);
+        return $actors;
+    }
+    public function getDirectors()
+    {
+        $sql = "SELECT persons.id, persons.name, persons.bio
+        FROM persons INNER JOIN movies_directors ON persons.id = movies_directors.director_id
+        UNION
+        SELECT persons.id, persons.name, persons.bio
+        FROM persons INNER JOIN series_directors ON persons.id = series_directors.director_id";
+        $result = $this->conn->query($sql);
+        $directors = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $director = new Person();
+                $director->setID($row['id']);
+                $director->setName($row['name']);
+                $director->setBio($row['bio']);
+                $directors[] = $director;
+            }
+        }
+        // print_r($directors);
+        return $directors;
+    }
     public function getSinglePerson($id)
     {
         $sql = "SELECT id, `name`, bio
@@ -220,7 +266,7 @@ class Database implements StorageInterface
     {
         $sql = "SELECT persons.id, persons.name, persons.bio
         FROM (persons INNER JOIN series_directors ON persons.id = series_directors.director_id)
-        INNER JOIN series ON series_directors.series_id = series_id
+        INNER JOIN series ON series_directors.series_id = series.id
         WHERE (((series.id)='$series'))";
         $result = $this->conn->query($sql);
         if ($result->num_rows > 0) {
@@ -233,6 +279,7 @@ class Database implements StorageInterface
                 $directors[] = $director;
             }
         }
+        print_r($directors);
         return $directors;
     }
     public function getMoviesOfPerson($id)

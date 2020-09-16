@@ -4,6 +4,7 @@ if (is_readable(__DIR__ . '/config.php')) {
 } else {
     die('Konfigurationsdatei nicht gefunden');
 }
+ob_start();
 header('Cache-Control: no cache');
 session_cache_limiter('private_no_expire');
 session_start();
