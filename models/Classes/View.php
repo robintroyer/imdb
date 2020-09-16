@@ -35,16 +35,15 @@ class View
         foreach ($actors as $actor) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $actor->getName()
-            . '<input name="person_details" type="submit" style="float:right;">
+            . '<input value="Details" name="person_details" type="submit" style="float:right;">
             <input name="person_details_id" value="' . $actor->getID() . '" type="hidden" style="float:right;">
             <input name="person_details_name" value="' . $actor->getName() . '" type="hidden" style="float:right;">
-            <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;"></li>';
+            <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;">
+            <input value="Löschen" name="delete_actor" type="submit" style="float:right;"></li>';
             echo '</form>';
         }
         echo '</ul>';
-        // if (isset($_POST['person_details'])) {
-        //     echo 'b';
-        // }
+        
     }
     private function showDirectors($directors)
     {
@@ -53,10 +52,11 @@ class View
         foreach ($directors as $director) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $director->getName()
-            . '<input name="director_details" type="submit" style="float:right;">
+            . '<input value="Details" name="director_details" type="submit" style="float:right;">
             <input name="director_details_id" value="' . $director->getID() . '" type="hidden" style="float:right;">
             <input name="director_details_name" value="' . $director->getName() . '" type="hidden" style="float:right;">
-            <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;"></li>';
+            <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;">
+            <input value="Löschen" name="delete_director" type="submit" style="float:right;"></li>';
             echo '</form>';
         }
         echo '</ul>';
@@ -72,7 +72,8 @@ class View
             . '<input class="details" type="submit" name="details" value="Details">
             <input type="hidden" name="details_id" value="' . $s->getID() . '">
             <input type="hidden" name="details_title" value="' . $s->getTitle() . '">
-            <input type="hidden" name="type" value="series"></li>';
+            <input type="hidden" name="type" value="series">
+            <input value="Löschen" name="delete_series" type="submit" style="float:right;"></li>';
             echo '</form>';
         }
         echo '</ul>';
@@ -90,7 +91,8 @@ class View
             . '<input class="details" type="submit" name="details" value="Details">
             <input type="hidden" name="details_id" value="' . $movie->getID() . '">
             <input type="hidden" name="details_title" value="' . $movie->getTitle() . '">
-            <input type="hidden" name="type" value="movie"></li>';
+            <input type="hidden" name="type" value="movie">
+            <input value="Löschen" name="delete_movie" type="submit" style="float:right;"></li>';
             echo '</form>';
         }
         // echo '</ul></form>';

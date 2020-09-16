@@ -362,4 +362,55 @@ class Database implements StorageInterface
             return $series_array;
         }
     }
+    public function deletePerson($person)
+    {
+        $sql = "DELETE FROM persons WHERE id = '$person'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM movies_cast WHERE actor_id = '$person'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM movies_directors WHERE director_id = '$person'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM series_cast WHERE actor_id = '$person'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM series_directors WHERE director_id = '$person'";
+        $this->conn->query($sql);
+    }
+    public function deleteMovie($movie)
+    {
+        $sql = "DELETE FROM movies WHERE id = '$movie'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM movies_cast WHERE movie_id = '$movie'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM movies_directors WHERE movie_id = '$movie'";
+        $this->conn->query($sql);
+    }
+    public function deleteSeries($series)
+    {
+        $sql = "DELETE FROM series WHERE id = '$series'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM series_cast WHERE series_id = '$series'";
+        $this->conn->query($sql);
+        $sql = "DELETE FROM movies_directors WHERE series_id = '$series'";
+        $this->conn->query($sql);
+    }
+    public function deleteActorOfMovie($actor, $movie)
+    {
+        $sql = "DELETE FROM movies_cast WHERE actor_id = '$actor' AND movie_id = '$movie'";
+        $this->conn->query($sql);
+    }
+    public function deleteActorOfSeries($actor, $series)
+    {
+        $sql = "DELETE FROM series_cast WHERE actor_id = '$actor' AND series_id = '$series'";
+        $this->conn->query($sql);
+    }
+    public function deleteDirectorOfMovie($director, $movie)
+    {
+        $sql = "DELETE FROM movies_directors WHERE director_id = '$director' AND movie_id = '$movie'";
+        $this->conn->query($sql);
+    }
+    public function deleteDirectorOfSeries($director, $series)
+    {
+        $sql = "DELETE FROM series_directors WHERE director_id = '$director' AND series_id = '$series'";
+        $this->conn->query($sql);
+    }
 }
