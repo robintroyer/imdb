@@ -413,4 +413,24 @@ class Database implements StorageInterface
         $sql = "DELETE FROM series_directors WHERE director_id = '$director' AND series_id = '$series'";
         $this->conn->query($sql);
     }
+    public function removeMovieFromActor($movie, $actor)
+    {
+        $sql = "DELETE FROM movies_cast WHERE movie_id = '$movie' AND actor_id = '$actor'";
+        $this->conn->query($sql);
+    }
+    public function removeSeriesFromActor($series, $actor)
+    {
+        $sql = "DELETE FROM series_cast WHERE series_id = '$series' AND actor_id = '$actor'";
+        $this->conn->query($sql);
+    }
+    public function removeMovieFromDirector($movie, $director)
+    {
+        $sql = "DELETE FROM movies_directors WHERE movie_id = '$movie' AND director_id = '$director'";
+        $this->conn->query($sql);
+    }
+    public function removeSeriesFromDirector($series, $director)
+    {
+        $sql = "DELETE FROM series_directors WHERE series_id = '$series' AND director_id = '$director'";
+        $this->conn->query($sql);
+    }
 }

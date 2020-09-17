@@ -28,4 +28,8 @@ interface StorageInterface
     public function deleteActorOfSeries($actor, $series);
     public function deleteDirectorOfMovie($director, $movie);
     public function deleteDirectorOfSeries($director, $series);
+    public function removeMovieFromActor($movie, $actor);
+    public function removeSeriesFromActor($series, $actor);
+    public function removeMovieFromDirector($movie, $director);
+    public function removeSeriesFromDirector($series, $director);
 }

@@ -35,11 +35,12 @@ class View
         foreach ($actors as $actor) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $actor->getName()
-            . '<input value="Details" name="person_details" type="submit" style="float:right;">
+            . '<input value="Löschen" name="delete_actor" type="submit" style="float:right;">
+            <input value="Details" name="person_details" type="submit" style="float:right;">
             <input name="person_details_id" value="' . $actor->getID() . '" type="hidden" style="float:right;">
             <input name="person_details_name" value="' . $actor->getName() . '" type="hidden" style="float:right;">
             <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;">
-            <input value="Löschen" name="delete_actor" type="submit" style="float:right;"></li>';
+            </li>';
             echo '</form>';
         }
         echo '</ul>';
@@ -52,11 +53,12 @@ class View
         foreach ($directors as $director) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $director->getName()
-            . '<input value="Details" name="director_details" type="submit" style="float:right;">
+            . '<input value="Löschen" name="delete_director" type="submit" style="float:right;">
+            <input value="Details" name="director_details" type="submit" style="float:right;">
             <input name="director_details_id" value="' . $director->getID() . '" type="hidden" style="float:right;">
             <input name="director_details_name" value="' . $director->getName() . '" type="hidden" style="float:right;">
             <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;">
-            <input value="Löschen" name="delete_director" type="submit" style="float:right;"></li>';
+            </li>';
             echo '</form>';
         }
         echo '</ul>';
@@ -69,11 +71,12 @@ class View
         foreach ($series as $s) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $s->getTitle()
-            . '<input class="details" type="submit" name="details" value="Details">
+            . '<input value="Löschen" name="delete_series" type="submit" style="float:right;">
+            <input class="details" type="submit" name="details" value="Details">
             <input type="hidden" name="details_id" value="' . $s->getID() . '">
             <input type="hidden" name="details_title" value="' . $s->getTitle() . '">
             <input type="hidden" name="type" value="series">
-            <input value="Löschen" name="delete_series" type="submit" style="float:right;"></li>';
+            </li>';
             echo '</form>';
         }
         echo '</ul>';
@@ -88,11 +91,12 @@ class View
         foreach ($movies as $movie) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $movie->getTitle()
-            . '<input class="details" type="submit" name="details" value="Details">
+            . '<input value="Löschen" name="delete_movie" type="submit" style="float:right;">
+            <input class="details" type="submit" name="details" value="Details">
             <input type="hidden" name="details_id" value="' . $movie->getID() . '">
             <input type="hidden" name="details_title" value="' . $movie->getTitle() . '">
             <input type="hidden" name="type" value="movie">
-            <input value="Löschen" name="delete_movie" type="submit" style="float:right;"></li>';
+            </li>';
             echo '</form>';
         }
         // echo '</ul></form>';
@@ -143,10 +147,13 @@ class View
             foreach ($movies as $movie) {
                 echo '<form method="post">';
                 echo '<li class="list-group-item">' . $movie->getTitle()
-                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                . '<input value="Film entfernen" name="remove_movie_from_actor" type="submit" style="float:right;">
+                <input value="Details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $movie->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $movie->getTitle() . '">
-                <input type="hidden" name="entry_type" value="movie"></li>';
+                <input type="hidden" name="entry_type" value="movie">
+                <input type="hidden" name="entry_id" value="' . $details->getID() . '">
+                </li>';
                 echo '</form>';
             }
             echo '</ul>';
@@ -157,10 +164,13 @@ class View
             foreach ($series as $s) {
                 echo '<form method="post">';
                 echo '<li class="list-group-item">' . $s->getTitle()
-                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                . '<input value="Serie entfernen" name="remove_series_from_actor" type="submit" style="float:right;">
+                <input value="Details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $s->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $s->getTitle() . '">
-                <input type="hidden" name="entry_type" value="series"></li>';
+                <input type="hidden" name="entry_type" value="series">
+                <input type="hidden" name="entry_id" value="' . $details->getID() . '">
+                </li>';
                 echo '</form>';
             }
             echo '</ul>';
@@ -171,10 +181,13 @@ class View
             foreach ($directed_movies as $directed_movie) {
                 echo '<form method="post">';
                 echo '<li class="list-group-item">' . $directed_movie->getTitle()
-                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                . '<input value="Film entfernen" name="remove_movie_from_director" type="submit" style="float:right;">
+                <input value="Details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $directed_movie->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $directed_movie->getTitle() . '">
-                <input type="hidden" name="entry_type" value="movie"></li>';
+                <input type="hidden" name="entry_type" value="movie">
+                <input type="hidden" name="entry_id" value="' . $details->getID() . '">
+                </li>';
                 echo '</form>';
             }
             echo '</ul>';
@@ -185,10 +198,13 @@ class View
             foreach ($directed_series as $directed_s) {
                 echo '<form method="post">';
                 echo '<li class="list-group-item">' . $directed_s->getTitle()
-                . '<input value="Details" name="entry_details" type="submit" style="float:right;">
+                . '<input value="Serie entfernen" name="remove_series_from_director" type="submit" style="float:right;">
+                <input value="Details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $directed_s->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $directed_s->getTitle() . '">
-                <input type="hidden" name="entry_type" value="series"></li>';
+                <input type="hidden" name="entry_type" value="series">
+                <input type="hidden" name="entry_id" value="' . $details->getID() . '">
+                </li>';
                 echo '</form>';
             }
             echo '</ul>';
@@ -203,10 +219,12 @@ class View
             $details = $this->storage->getSingleMovie($_GET['id']);
             $actors = $this->storage->getActorsOfMovie($_GET['id']);
             $directors = $this->storage->getDirectorsOfMovie($_GET['id']);
+            $type = 'movie';
         } elseif ($_GET['type'] == 'series') {
             $details = $this->storage->getSingleSeries($_GET['id']);
             $actors = $this->storage->getActorsOfSeries($_GET['id']);
             $directors = $this->storage->getDirectorsOfSeries($_GET['id']);
+            $type = 'series';
         }
         
         echo '<h1>' . $details->getTitle() . '</h1>';
@@ -214,10 +232,13 @@ class View
         foreach ($actors as $actor) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $actor->getName()
-            . '<input value="Details" name="person_details" type="submit" style="float:right;">
+            . '<input value="Löschen" name="remove_actor" type="submit" style="float:right;">
+            <input value="Details" name="person_details" type="submit" style="float:right;">
             <input name="person_details_id" value="' . $actor->getID() . '" type="hidden" style="float:right;">
             <input name="person_details_name" value="' . $actor->getName() . '" type="hidden" style="float:right;">
-            <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;"></li>';
+            <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;">
+            <input name="person_details_type" value="' . $type . '" type="hidden">
+            </li>';
             echo '</form>';
         }
         echo '</ul>';
@@ -227,10 +248,13 @@ class View
         foreach ($directors as $director) {
             echo '<form method="post">';
             echo '<li class="list-group-item">' . $director->getName()
-            . '<input value="Details" name="director_details" type="submit" style="float:right;">
+            . '<input value="Löschen" name="remove_director" type="submit" style="float:right;">
+            <input value="Details" name="director_details" type="submit" style="float:right;">
             <input name="director_details_id" value="' . $director->getID() . '" type="hidden" style="float:right;">
             <input name="director_details_name" value="' . $director->getName() . '" type="hidden" style="float:right;">
-            <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;"></li>';
+            <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;">
+            <input name="director_details_type" value="' . $type . '" type="hidden">
+            </li>';
             echo '</form>';
         }
         echo '</ul>';

@@ -18,17 +18,17 @@ $form = new Form($storage);
 $view = new View($storage);
 
 $view->personDetailsPage();
-if (isset($_POST['delete_actor'])) {
-    $storage->deletePerson($_POST['person_details_id']);
+if (isset($_POST['remove_movie_from_actor'])) {
+    $storage->removeMovieFromActor($_POST['entry_details_id'], $_POST['entry_id']);
 }
-if (isset($_POST['delete_director'])) {
-    $storage->deletePerson($_POST['director_details_id']);
+if (isset($_POST['remove_series_from_actor'])) {
+    $storage->removeSeriesFromActor($_POST['entry_details_id'], $_POST['entry_id']);
 }
-if (isset($_POST['delete_movie'])) {
-    $storage->deleteMovie($_POST['details_id']);
+if (isset($_POST['remove_movie_from_director'])) {
+    $storage->removeMovieFromDirector($_POST['entry_details_id'], $_POST['entry_id']);
 }
-if (isset($_POST['delete_series'])) {
-    $storage->deleteSeries($_POST['details_id']);
+if (isset($_POST['remove_series_from_director'])) {
+    $storage->removeSeriesFromDirector($_POST['entry_details_id'], $_POST['entry_id']);
 }
 ?>
 
