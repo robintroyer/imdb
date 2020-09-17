@@ -7,6 +7,7 @@ if (is_readable(__DIR__ . '/config.php')) {
 session_start();
 require __DIR__ . '/vendor/autoload.php';
 
+
 $storage = new Database();
 $configDB = new stdClass();
 $configDB->host = $DB_HOST;

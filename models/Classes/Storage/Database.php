@@ -433,4 +433,72 @@ class Database implements StorageInterface
         $sql = "DELETE FROM series_directors WHERE series_id = '$series' AND director_id = '$director'";
         $this->conn->query($sql);
     }
+    public function getIdOfActor($actor)
+    {
+        $sql = "SELECT id, `name` FROM persons WHERE `name` = '$actor'";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $id = $row['id'];
+                return $id;
+            }
+        }
+    }
+    public function getIdOfDirector($director)
+    {
+        $sql = "SELECT id, `name` FROM persons WHERE `name` = '$director'";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $id = $row['id'];
+                return $id;
+            }
+        }
+    }
+    public function getIdOfMovie($movie)
+    {
+        $sql = "SELECT id, title FROM movies WHERE title = '$movie'";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $id = $row['id'];
+                return $id;
+            }
+        }
+    }
+    public function getIdOfSeries($series)
+    {
+        $sql = "SELECT id, title FROM series WHERE title '$series'";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $id = $row['id'];
+                return $id;
+            }
+        }
+    }
+    public function addActorToMovie($actor, $movie)
+    {
+        $sql = "INSERT INTO movies_cast (actor_id, movie_id)
+        VALUES ('$actor', '$movie')";
+        $this->conn->query($sql);
+    }
+    public function addDirectorToMovie($director, $movie)
+    {
+        $sql = "INSERT INTO movies_directors (director_id, movie_id)
+        VALUES ('$director', '$movie')";
+        $this->conn->query($sql);
+    }
+    public function addActorToSeries($actor, $series)
+    {
+        $sql = "INSERT INTO series_cast (actor_id, series_id)
+        VALUES ('$actor', '$series')";
+        $this->conn->query($sql);
+    }
+    public function addDirectorToSeries($director, $series)
+    {
+        $sql = "INSERT INTO series_directors (director_id, series_id)
+        VALUES ('$director', '$series')";
+        $this->conn->query($sql);
+    }
 }

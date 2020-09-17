@@ -7,6 +7,8 @@ if (is_readable(__DIR__ . '/config.php')) {
 session_start();
 require __DIR__ . '/vendor/autoload.php';
 
+echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
+
 $storage = new Database();
 $configDB = new stdClass();
 $configDB->host = $DB_HOST;
@@ -32,6 +34,8 @@ if (isset($_POST['director_details_type'])) {
         $storage->deleteDirectorOfSeries($_POST['director_details_id'], $_GET['id']);
     }
 }
+
+
 ?>
 
 <!doctype html>

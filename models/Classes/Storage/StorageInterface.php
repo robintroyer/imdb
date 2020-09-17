@@ -32,4 +32,12 @@ interface StorageInterface
     public function removeSeriesFromActor($series, $actor);
     public function removeMovieFromDirector($movie, $director);
     public function removeSeriesFromDirector($series, $director);
+    public function getIdOfActor($actor);
+    public function getIdOfDirector($director);
+    public function getIdOfMovie($movie);
+    public function getIdOfSeries($series);
+    public function addActorToMovie($actor, $movie);
+    public function addDirectorToMovie($director, $movie);
+    public function addActorToSeries($actor, $series);
+    public function addDirectorToSeries($director, $series);
 }

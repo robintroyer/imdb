@@ -226,6 +226,8 @@ class View
             $directors = $this->storage->getDirectorsOfSeries($_GET['id']);
             $type = 'series';
         }
+
+        
         
         echo '<h1>' . $details->getTitle() . '</h1>';
         echo '<ul class="list-group">';
@@ -242,6 +244,123 @@ class View
             echo '</form>';
         }
         echo '</ul>';
+
+        // echo '<form method="post"><input type="submit" class="btn btn-success"></form>';
+        echo '<button id="new_actor" type="button" class="btn btn-success">Schauspieler hinzufügen</button>';
+        echo '<div id="new_actor_form"></div>';
+        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
+        $jquery = '<script type="text/javascript">
+        $(document).ready(function() {
+            $("#new_actor").click(function() {
+                console.log("x");
+                $("#new_actor").hide();
+                
+                $("#new_actor_form").append(
+                    "<button id=\'new_person\' type\"button\" class=\'btn btn-info\'>Neuer Schauspieler</button>",
+                    " ",
+                    "<button id=\'existing_person\' type=\'button\' class=\'btn btn-info\'>Bestehender Schauspieler</button>",
+                    "<div id=\'person_div\'></div>"
+                );
+                $("#new_person").click(function() {
+                    console.log("a");
+                    $("#new_person").hide();
+                    $("#existing_person").hide();
+                    $("#person_div").append(
+                        "<form>",
+                        "<label for\'new_person_name\'><strong>Name</strong></label><br />",
+                        "<input type=\'text\' name=\'new_person_name\'><br />",
+                        "<label for\'new_person_bio\'><strong>Biografie</strong></label><br />",
+                        "<input type=\'text\' name=\'new_person_bio\'><br />",
+                        "<input type=\'submit\' name=\'new_person_submit\' value=\'Hinzufügen\'>",
+                        "</form>"
+                    );
+                });
+                $("#existing_person").click(function() {
+                    $("#new_person").hide();
+                    $("#existing_person").hide();
+                    $("#person_div").append(
+                        "<form id=\'select_form\' method=\'post\'>"
+                    );
+                    $("#select_form").append(
+                        "<select id=\'person_select\' name=\'person\'>",
+                        "&nbsp<input type=\'submit\' value=\'Hinzufügen\' name=\'add_actor\'>"
+                    );
+                    appendOptions();
+                });
+            });
+            
+        });
+        </script>';
+
+        if (isset($_POST['add_actor'])) {
+            // echo 'i';
+            // echo $_POST['person'];
+            // echo $this->storage->getIdOfActor($_POST['person']);
+            $this->storage->addActorToMovie(
+                $this->storage->getIdOfActor($_POST['person']), $_GET['id']
+            );
+        }
+        
+
+        $persons = $this->storage->getPersons();
+        for ($i = 0; $i < count($persons); $i++) {
+            $persons[$i] = $persons[$i]->getName();
+        }
+        
+        // print_r($persons);
+        $test = 'asdf';
+        echo json_encode($persons);
+        // print_r(json_encode($persons));
+
+        echo '<script type="text/javascript">
+            function appendOptions() {
+                let persons = ' . json_encode($persons) . ';
+                console.log(persons);
+
+                
+                persons.forEach(person => {
+                    console.log(person);
+                    $("#person_select").append("<option value=\'" + person + "\'>" + person + "</option>");
+                    // $("#person_select").append(new Option("abc", "xyz));
+                });
+                
+            }
+        </script>';
+
+
+
+
+        // $dom = new DOMDocument();
+        
+
+
+        // foreach ($this->storage->getPersons() as $person) {
+        //     echo '<script type="text/javascript">
+        //     $(document).ready(function() {
+        //         if (document.getElementById("person_div")) {
+
+        //         } else {
+        //             console.log("ID does not exist");
+        //         }
+        //     });
+        //     </script>';
+        // }
+
+
+        // foreach ($this->storage->getPersons() as $person) {
+        //     $jquery .= '<option>' . $person->getName() . '</option>,';
+        // }
+
+        // $jquery .= "<option>ABC</option>,";
+
+        // $jquery .=    '"</select>"
+        //             );
+        //         });
+        //     });
+            
+        // });
+        // </script>';
+        echo $jquery;
         echo '<br />';
         echo '<h3>Regisseur/Produzent</h3>';
         echo '<ul class="list-group">';
