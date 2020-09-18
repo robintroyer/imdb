@@ -13,8 +13,6 @@ class Form
         $submit = '<input type="submit">';
         echo '<form method="post"><strong>Neue Person anlegen</strong><br />Name:<br />' . $name . '<br />Biografie:<br />' . $bio . '<br />' . $submit . '</form>';
         if (
-            // isset($_POST['name'])
-            // && isset($_POST['bio'])
             !empty($_POST['name'])
             && !empty($_POST['bio'])
         ) {
@@ -27,13 +25,8 @@ class Form
     public function newMovie()
     {
         $persons = $this->storage->getPersons();
-        // print_r($persons);
-
         $title = '<input type="text" name="title">';
-
         $submit = '<input id="submit" type="submit" name="submit">';
-        // $new_actor = '<input type="submit" name="new_actor" value="Neuer Schauspieler">';
-
         echo '<form id="form" method="post"><strong>Film/Serie anlegen</strong><br />';
         echo '<div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="radio" id="inlineRadio1" value="movie">
@@ -54,24 +47,17 @@ class Form
         echo '<button type="button" name="add" id="add_director">Neuer Regisseur/Produzent</button><br />';
 
         echo '<label id="actor_label" for="actor">Schauspieler</label><br />';
-
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
         $option_string = '';
         $option_string .= '<option>---</option>';
         foreach ($persons as $person) {
             $option_string .= '<option value=\'' . $person->getID() . '\'>' . $person->getName() . '</option>';
         }
-        
-        
-
-        
-        
         echo '<select name="actors[]">';
         echo '<option>---</option>';
         foreach ($persons as $person) {
             echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
         }
-        
         echo '</select><br />';
         echo '<script type="text/javascript">
             $(document).ready(function() {
@@ -85,7 +71,6 @@ class Form
         </script>';
         echo '<button type="button" name="add" id="add">Neuer Schauspieler</button><br />';
         echo $submit . '</form>';
-
         if (isset($_POST['submit'])) {
             if (
                 !empty($_POST['title'])

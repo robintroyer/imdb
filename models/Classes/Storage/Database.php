@@ -8,9 +8,6 @@ class Database implements StorageInterface
         if ($this->conn->connect_error) {
             die('Connection failed: ') . $this->conn->connect_error;
         }
-
-        
-        
     }
     public function savePerson($person)
     {
@@ -25,8 +22,6 @@ class Database implements StorageInterface
         $sql = "INSERT INTO movies (title, director)
         VALUES ('" . $movie->getTitle() . "', '" . $movie->getDirector() . "')";
         $this->conn->query($sql);
-        print_r($movie);
-        print_r($actors);
         $movie_id = $this->conn->insert_id;
         foreach ($actors as $actor) {
             $sql = "INSERT INTO movies_cast
@@ -41,9 +36,6 @@ class Database implements StorageInterface
     }
     public function saveSeries($series, $actors, $directors)
     {
-        print_r($series);
-        print_r($actors);
-        print_r($directors);
         $sql = "INSERT INTO series (title)
         VALUES ('" . $series->getTitle() . "')";
         $this->conn->query($sql);
@@ -88,7 +80,6 @@ class Database implements StorageInterface
                 $movie = new Movie();
                 $movie->setID($row['id']);
                 $movie->setTitle($row['title']);
-                $movie->setDirector($row['director']);
                 $movies[] = $movie;
             }
         }
@@ -120,7 +111,6 @@ class Database implements StorageInterface
         FROM persons INNER JOIN series_cast ON persons.id = series_cast.actor_id";
 
         $result = $this->conn->query($sql);
-        // print_r($result);
         $actors = [];
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -131,9 +121,6 @@ class Database implements StorageInterface
                 $actors[] = $actor;
             }
         }
-
-
-        // print_r($actors);
         return $actors;
     }
     public function getDirectors()
@@ -154,7 +141,6 @@ class Database implements StorageInterface
                 $directors[] = $director;
             }
         }
-        // print_r($directors);
         return $directors;
     }
     public function getSinglePerson($id)
@@ -184,11 +170,9 @@ class Database implements StorageInterface
                 $movie = new Movie();
                 $movie->setID($row['id']);
                 $movie->setTitle($row['title']);
-                $movie->setDirector($row['director']);
             }
         }
         return $movie;
-
     }
     public function getSingleSeries($id)
     {
@@ -212,7 +196,6 @@ class Database implements StorageInterface
         WHERE (((movies.id)='$movie'));
         ";
         $result = $this->conn->query($sql);
-        // print_r($result);
         if ($result->num_rows > 0) {
             $persons = [];
             while ($row = $result->fetch_assoc()) {
@@ -279,7 +262,6 @@ class Database implements StorageInterface
                 $directors[] = $director;
             }
         }
-        print_r($directors);
         return $directors;
     }
     public function getMoviesOfPerson($id)

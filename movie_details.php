@@ -6,9 +6,7 @@ if (is_readable(__DIR__ . '/config.php')) {
 }
 session_start();
 require __DIR__ . '/vendor/autoload.php';
-
 echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
-
 $storage = new Database();
 $configDB = new stdClass();
 $configDB->host = $DB_HOST;
@@ -18,26 +16,26 @@ $configDB->name = $DB_NAME;
 $storage->initialize($configDB);
 $form = new Form($storage);
 $view = new View($storage);
-
 $view->detailsPage();
 if (isset($_POST['person_details_type'])) {
-    if ($_POST['person_details_type'] == 'movie') {
-        $storage->deleteActorOfMovie($_POST['person_details_id'], $_GET['id']);
-    } elseif ($_POST['person_details_type'] == 'series') {
-        $storage->deleteActorOfSeries($_POST['person_details_id'], $_GET['id']);
+    if (isset($_POST['remove_actor'])) {
+        if ($_POST['person_details_type'] == 'movie') {
+            $storage->deleteActorOfMovie($_POST['person_details_id'], $_GET['id']);
+        } elseif ($_POST['person_details_type'] == 'series') {
+            $storage->deleteActorOfSeries($_POST['person_details_id'], $_GET['id']);
+        }
     }
 }
 if (isset($_POST['director_details_type'])) {
-    if ($_POST['director_details_type'] == 'movie') {
-        $storage->deleteDirectorOfMovie($_POST['director_details_id'], $_GET['id']);
-    } elseif ($_POST['director_details_type'] == 'series') {
-        $storage->deleteDirectorOfSeries($_POST['director_details_id'], $_GET['id']);
+    if (isset($_POST['remove_director'])) {
+        if ($_POST['director_details_type'] == 'movie') {
+            $storage->deleteDirectorOfMovie($_POST['director_details_id'], $_GET['id']);
+        } elseif ($_POST['director_details_type'] == 'series') {
+            $storage->deleteDirectorOfSeries($_POST['director_details_id'], $_GET['id']);
+        }
     }
 }
-
-
 ?>
-
 <!doctype html>
     <html>
         <head>
