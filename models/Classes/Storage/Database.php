@@ -19,20 +19,24 @@ class Database implements StorageInterface
     }
     public function saveMovie($movie, $actors, $directors)
     {
-        $sql = "INSERT INTO movies (title, director)
-        VALUES ('" . $movie->getTitle() . "', '" . $movie->getDirector() . "')";
+        $sql = "INSERT INTO movies (title)
+        VALUES ('" . $movie->getTitle() . "')";
         $this->conn->query($sql);
         $movie_id = $this->conn->insert_id;
-        foreach ($actors as $actor) {
-            $sql = "INSERT INTO movies_cast
-            VALUES ('" . $actor . "', '$movie_id')";
-            $this->conn->query($sql);
+        if ($actors) {
+            foreach ($actors as $actor) {
+                $sql = "INSERT INTO movies_cast
+                VALUES ('" . $actor . "', '$movie_id')";
+                $this->conn->query($sql);
+            }
         }
-        foreach ($directors as $director) {
-            $sql = "INSERT INTO movies_directors
-            VALUES ('$director', '$movie_id')";
-            $this->conn->query($sql);
-        }
+        if ($directors) {
+            foreach ($directors as $director) {
+                $sql = "INSERT INTO movies_directors
+                VALUES ('$director', '$movie_id')";
+                $this->conn->query($sql);
+            }
+        }  
     }
     public function saveSeries($series, $actors, $directors)
     {
@@ -40,15 +44,19 @@ class Database implements StorageInterface
         VALUES ('" . $series->getTitle() . "')";
         $this->conn->query($sql);
         $series_id = $this->conn->insert_id;
-        foreach ($actors as $actor) {
-            $sql = "INSERT INTO series_cast
-            VALUES ('$actor', '$series_id')";
-            $this->conn->query($sql);
+        if ($actors) {
+            foreach ($actors as $actor) {
+                $sql = "INSERT INTO series_cast
+                VALUES ('$actor', '$series_id')";
+                $this->conn->query($sql);
+            }
         }
-        foreach ($directors as $director) {
-            $sql = "INSERT INTO series_directors
-            VALUES ('$director', '$series_id')";
-            $this->conn->query($sql);
+        if ($directors) {
+            foreach ($directors as $director) {
+                $sql = "INSERT INTO series_directors
+                VALUES ('$director', '$series_id')";
+                $this->conn->query($sql);
+            }
         }
     }
     public function getPersons()
@@ -243,7 +251,9 @@ class Database implements StorageInterface
                 $directors[] = $director;
             }
         }
-        return $directors;
+        if (isset($directors)) {
+            return $directors;
+        }
     }
     public function getDirectorsOfSeries($series)
     {
@@ -450,7 +460,7 @@ class Database implements StorageInterface
     }
     public function getIdOfSeries($series)
     {
-        $sql = "SELECT id, title FROM series WHERE title '$series'";
+        $sql = "SELECT id, title FROM series WHERE title = '$series'";
         $result = $this->conn->query($sql);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
