@@ -10,7 +10,7 @@ $form = new Form($storage);
 $view = new View($storage);
 $form->newPerson();
 $form->newMovie();
-$view->showButtons($storage->getMovies(), $storage->getSeries(), $storage->getActors(), $storage->getDirectors());
+$view->showButtons($storage->getMovies(), $storage->getSeries(), $storage->getActors(), $storage->getDirectors(), $storage->getPersons());
 if (isset($_POST['details'])) {
     $view->showDetails();
 }
