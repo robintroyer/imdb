@@ -38,14 +38,12 @@ class Form
             </div><br />';
         echo 'Titel:<br />' . $title . '<br />';
         echo '<label for="director">Regisseur/Produzent</label><br />';
-        echo '<select name="directors[]">';
+        echo '<select class="select_directors" name="directors[]">';
         echo '<option>---</option>';
         foreach ($persons as $person) {
             echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
         }
         echo '</select><br />';
-        echo '<button type="button" name="add" id="add_director">Neuer Regisseur/Produzent</button><br />';
-
         echo '<label id="actor_label" for="actor">Schauspieler</label><br />';
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
         $option_string = '';
@@ -53,7 +51,8 @@ class Form
         foreach ($persons as $person) {
             $option_string .= '<option value=\'' . $person->getID() . '\'>' . $person->getName() . '</option>';
         }
-        echo '<select name="actors[]">';
+        $option_string_directors = $option_string;
+        echo '<select class="select_actors" name="actors[]">';
         echo '<option>---</option>';
         foreach ($persons as $person) {
             echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
@@ -61,15 +60,15 @@ class Form
         echo '</select><br />';
         echo '<script type="text/javascript">
             $(document).ready(function() {
-                $("#add").click(function() {
-                    $("#form select:last").after("<br /><select name=\'actors[]\'>' . $option_string . '</select>");
-                })
-                $("#add_director").click(function() {
-                    $("#add_director").before("<select name=\'directors[]\'>' . $option_string . '</select><br />");
-                })
+                $(document).on("change", ".select_actors:last", function() {
+                    // console.log("x");
+                    $(".select_actors:last").after("<br /><select class=\'select_actors\' name=\'actors[]\'>' . $option_string . '</select>");
+                });
+                $(document).on("change", ".select_directors:last", function() {
+                    $(".select_directors:last").after("<br /><select class=\'select_directors\' name=\'directors[]\'>' . $option_string_directors . '</select>");
+                });
             });
         </script>';
-        echo '<button type="button" name="add" id="add">Neuer Schauspieler</button><br />';
         echo $submit . '</form>';
         if (isset($_POST['submit'])) {
             if (

@@ -32,3 +32,6 @@ if (isset($_POST['delete_movie'])) {
 if (isset($_POST['delete_series'])) {
     $storage->deleteSeries($_POST['details_id']);
 }
+if (isset($_POST['delete_person'])) {
+    $storage->deletePerson($_POST['person_details_id']);
+}

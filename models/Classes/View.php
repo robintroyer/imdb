@@ -300,8 +300,6 @@ class View
             $directors = $this->storage->getDirectorsOfSeries($_GET['id']);
             $type = 'series';
         }
-        // echo '<script type="text/javascript">var title = ' . $details->getTitle() . ';</script>';
-        // echo $type;
         if ($type == 'series') {
             echo '<h1 id="title_heading"><span id="title_series">' . $details->getTitle()
             . '</span>&nbsp<button id="edit_series" class="btn btn-warning">Bearbeiten</button></h1>';
@@ -309,7 +307,6 @@ class View
             echo '<h1 id="title_heading"><span id="title_movie">' . $details->getTitle()
             . '</span>&nbsp<button id="edit_movie" class="btn btn-warning">Bearbeiten</button></h1>';
         }
-        // echo '<button class="btn btn-warning">Bearbeiten</button>';
         echo '<ul class="list-group">';
         ob_start();
         if (isset($actors)) {

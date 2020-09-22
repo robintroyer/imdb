@@ -214,7 +214,10 @@ class Database implements StorageInterface
                 $persons[] = $person;
             }
         }
-        return $persons;
+        if (isset($persons)) {
+            return $persons;
+
+        }
     }
     public function getActorsOfSeries($series)
     {
@@ -232,7 +235,9 @@ class Database implements StorageInterface
                 $actors[] = $actor;
             }
         }
-        return $actors;
+        if (isset($actors)) {
+            return $actors;
+        }
     }
     public function getDirectorsOfMovie($movie)
     {
@@ -272,7 +277,9 @@ class Database implements StorageInterface
                 $directors[] = $director;
             }
         }
-        return $directors;
+        if (isset($directors)) {
+            return $directors;
+        }
     }
     public function getMoviesOfPerson($id)
     {

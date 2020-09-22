@@ -17,12 +17,10 @@ $storage->initialize($configDB);
 $form = new Form($storage);
 $view = new View($storage);
 $view->detailsPage();
-
 $persons = $storage->getPersons();
 for ($i = 0; $i < count($persons); $i++) {
     $persons[$i] = $persons[$i]->getName();
 }
-
 if (isset($_POST['person_details_type'])) {
     if (isset($_POST['remove_actor'])) {
         if ($_POST['person_details_type'] == 'movie') {
@@ -49,7 +47,6 @@ if (isset($_POST['submit_edit_movie'])) {
     $movie = new Movie();
     $movie->setID($_GET['id']);
     $movie->setTitle($_POST['new_title']);
-    // print_r($movie);
     $storage->editMovie($movie);
     $view->reloadPage('movie_details');
 }
@@ -75,10 +72,6 @@ if (isset($_POST['submit_edit_series'])) {
                         $('#person_select').append('<option value="' + person + '">' + person + '</option>');
                     });
                 }
-                // function appendOptionsDirectors()
-                // {
-
-                // }
                 $(document).ready(function() {
                     $(document).on('click', '#edit_movie', function() {
                         $('#edit_movie').remove();
@@ -102,7 +95,6 @@ if (isset($_POST['submit_edit_series'])) {
                     })
                     $(document).on('click', '#new_actor', function() {
                         $('#new_actor').remove();
-                        // $('#new_form').remove();
                         $("#new_actor_form").append(
                             "<button id='new_person' type'button' class='btn btn-info'>Neuer Schauspieler</button>",
                             " ",
@@ -125,7 +117,6 @@ if (isset($_POST['submit_edit_series'])) {
                         if (document.getElementById('new_actor') == null) {
                             $('#new_actor_form').before('<button id="new_actor" class="btn btn-success">Schauspieler hinzufügen</button>');
                             $('#new_actor_form').empty();
-
                         }
                     });
                     $(document).on('click', '#new_person', function() {
@@ -181,7 +172,6 @@ if (isset($_POST['submit_edit_series'])) {
                         appendOptions();
                     });
                 })
-
             </script>
         </head>
         <body>
