@@ -33,15 +33,27 @@ for ($i = 0; $i < count($series); $i++) {
 $view->personDetailsPage();
 if (isset($_POST['remove_movie_from_actor'])) {
     $storage->removeMovieFromActor($_POST['entry_details_id'], $_POST['entry_id']);
+    $view->reloadPage('person_details');
 }
 if (isset($_POST['remove_series_from_actor'])) {
     $storage->removeSeriesFromActor($_POST['entry_details_id'], $_POST['entry_id']);
+    $view->reloadPage('person_details');
 }
 if (isset($_POST['remove_movie_from_director'])) {
     $storage->removeMovieFromDirector($_POST['entry_details_id'], $_POST['entry_id']);
+    $view->reloadPage('person_details');
 }
 if (isset($_POST['remove_series_from_director'])) {
     $storage->removeSeriesFromDirector($_POST['entry_details_id'], $_POST['entry_id']);
+    $view->reloadPage('person_details');
+}
+if (isset($_POST['edit_submit'])) {
+    $person = new Person();
+    $person->setID($_GET['id']);
+    $person->setName($_POST['edit_name']);
+    $person->setBio($_POST['edit_bio']);
+    $storage->editPerson($person);
+    $view->reloadPage('person_details');
 }
 ?>
 
@@ -71,8 +83,18 @@ if (isset($_POST['remove_series_from_director'])) {
                     });
                 }
                 $(document).ready(function() {
-                    
-
+                    $(document).on('click', '#edit_person', function() {
+                        $('#edit_person').remove();
+                        $('#person_bio').after('<div id="edit_div">');
+                        $('#edit_div').append('<form method="post" id="edit_form">');
+                        name = document.getElementById('person_name').textContent;
+                        bio = document.getElementById('person_bio').textContent;
+                        $('#edit_form').append(
+                            '<input type="text" name="edit_name" value="' + name + '"><br />',
+                            '<input type="text" name="edit_bio" value="' + bio + '"><br />',
+                            '<input type="submit" name="edit_submit" value="Senden">'  
+                        );
+                    })
                     $(document).on('click', '#new_movie', function() {
                         $("#new_movie").remove();
                         $("#movie_div").remove();
@@ -265,7 +287,8 @@ if (isset($_POST['remove_series_from_director'])) {
                         );
                         appendOptionsSeries();
                     });
-                })
+                
+                });
             </script>
         </head>
         <body>

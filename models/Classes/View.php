@@ -6,6 +6,16 @@ class View
     {
         $this->storage = $storage;
     }
+    public function reloadPage($page)
+    {
+        if ($page == 'movie_details') {
+            header('location: ' . $_SERVER['PHP_SELF'] . '?id=' . $_GET['id'] . '&title=' . $_GET['title'] . '&type=' . $_GET['type']);
+            die;        
+        } elseif ($page == 'person_details') {
+            header('location: ' . $_SERVER['PHP_SELF'] . '?id=' . $_GET['id'] . '&name=' . $_GET['name']);
+            die;        
+        }
+    }
     public function showButtons($movies, $series, $actors, $directors, $persons)
     {
         echo '<form method="post">';
@@ -131,9 +141,10 @@ class View
         $series = $this->storage->getSeriesOfPerson($_GET['id']);
         $directed_movies = $this->storage->getDirectedMoviesOfPerson($_GET['id']);
         $directed_series = $this->storage->getDirectedSeriesOfPerson($_GET['id']);
-        echo '<h1>' . $details->getName() . '</h1>';
+        echo '<h1 id="person_name">' . $details->getName() . '</h1>';
         echo '<h3>Biografie</h3>';
-        echo '<p>' . $details->getBio() . '</p>';
+        echo '<p id="person_bio">' . $details->getBio() . '</p>';
+        echo '<button id="edit_person" class="btn btn-warning">Bearbeiten</button>';
         echo '<h4>Filme</h4>';
         if (isset($movies)) {
             echo '<ul class="list-group">';
@@ -161,11 +172,13 @@ class View
             $this->storage->addActorToMovie(
                 $_GET['id'], $this->storage->getIdOfMovie($_POST['new_movie_title'])
             );
+            $this->reloadPage('person_details');
         }
         if (isset($_POST['add_movie'])) {
             $this->storage->addActorToMovie(
                 $_GET['id'], $this->storage->getIdOfMovie($_POST['movie'])
             );
+            $this->reloadPage('person_details');
         }
         ob_start();
         echo '<h4 id="series_heading">Serien</h4>';
@@ -199,6 +212,7 @@ class View
             $this->storage->addActorToSeries(
                 $_GET['id'], $this->storage->getIdOfSeries($_POST['series'])
             );
+            $this->reloadPage('person_details');
         }
         echo '<h4 id="director_movies_heading">Regisseur in folgenden Filmen</h4>';
         if (isset($directed_movies)) {
@@ -226,11 +240,13 @@ class View
             $this->storage->addDirectorToMovie(
                 $_GET['id'], $this->storage->getIdOfMovie($_POST['new_movie_title'])
             );
+            $this->reloadPage('person_details');
         }
         if (isset($_POST['add_directed_movie'])) {
             $this->storage->addDirectorToMovie(
                 $_GET['id'], $this->storage->getIdOfMovie($_POST['movie'])
             );
+            $this->reloadPage('person_details');
         }
         echo '<h4 id="directed_series_heading">Regisseur in folgenden Serien</h4>';
         if (isset($directed_series)) {
@@ -259,11 +275,13 @@ class View
             $this->storage->addDirectorToSeries(
                 $_GET['id'], $this->storage->getIdOfSeries($_POST['new_series_title'])
             );
+            $this->reloadPage('person_details');
         }
         if (isset($_POST['add_directed_series'])) {
             $this->storage->addDirectorToSeries(
                 $_GET['id'], $this->storage->getIdOfSeries($_POST['series'])
             );
+            $this->reloadPage('person_details');
         }
         if (isset($_POST['entry_details'])) {
             header('location:/imdb/movie_details.php/?id=' . $_POST['entry_details_id'] . '&title=' . $_POST['entry_details_title'] . '&type=' . $_POST['entry_type']);
@@ -282,7 +300,16 @@ class View
             $directors = $this->storage->getDirectorsOfSeries($_GET['id']);
             $type = 'series';
         }
-        echo '<h1>' . $details->getTitle() . '</h1>';
+        // echo '<script type="text/javascript">var title = ' . $details->getTitle() . ';</script>';
+        // echo $type;
+        if ($type == 'series') {
+            echo '<h1 id="title_heading"><span id="title_series">' . $details->getTitle()
+            . '</span>&nbsp<button id="edit_series" class="btn btn-warning">Bearbeiten</button></h1>';
+        } elseif ($type == 'movie') {
+            echo '<h1 id="title_heading"><span id="title_movie">' . $details->getTitle()
+            . '</span>&nbsp<button id="edit_movie" class="btn btn-warning">Bearbeiten</button></h1>';
+        }
+        // echo '<button class="btn btn-warning">Bearbeiten</button>';
         echo '<ul class="list-group">';
         ob_start();
         if (isset($actors)) {
@@ -311,6 +338,7 @@ class View
                 $this->storage->addActorToMovie(
                     $this->storage->getIdOfActor($_POST['new_person_name']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             } elseif ($type == 'series') {
                 $person = new Person();
                 $person->setName($_POST['new_person_name']);
@@ -319,6 +347,7 @@ class View
                 $this->storage->addActorToSeries(
                     $this->storage->getIdOfActor($_POST['new_person_name']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             }
         }
         if (isset($_POST['add_actor'])) {
@@ -326,10 +355,12 @@ class View
                 $this->storage->addActorToMovie(
                     $this->storage->getIdOfActor($_POST['person']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             } elseif ($type = 'series') {
                 $this->storage->addActorToSeries(
                     $this->storage->getIdOfActor($_POST['person']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             }
         }
         ob_start();
@@ -362,6 +393,7 @@ class View
                 $this->storage->addDirectorToMovie(
                     $this->storage->getIdOfDirector($_POST['new_person_name']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             } elseif ($type == 'series') {
                 $person = new Person();
                 $person->setName($_POST['new_person_name']);
@@ -370,6 +402,7 @@ class View
                 $this->storage->addDirectorToSeries(
                     $this->storage->getIdOfDirector($_POST['new_person_name']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             }
         }
         if (isset($_POST['add_director'])) {
@@ -377,10 +410,12 @@ class View
                 $this->storage->addDirectorToMovie(
                     $this->storage->getIdOfDirector($_POST['person']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             } elseif ($type == 'series') {
                 $this->storage->addDirectorToSeries(
                     $this->storage->getIdOfDirector($_POST['person']), $_GET['id']
                 );
+                $this->reloadPage('movie_details');
             }
         }
         if (

@@ -27,8 +27,10 @@ if (isset($_POST['person_details_type'])) {
     if (isset($_POST['remove_actor'])) {
         if ($_POST['person_details_type'] == 'movie') {
             $storage->deleteActorOfMovie($_POST['person_details_id'], $_GET['id']);
+            $view->reloadPage('movie_details');
         } elseif ($_POST['person_details_type'] == 'series') {
             $storage->deleteActorOfSeries($_POST['person_details_id'], $_GET['id']);
+            $view->reloadPage('movie_details');
         }
     }
 }
@@ -36,10 +38,28 @@ if (isset($_POST['director_details_type'])) {
     if (isset($_POST['remove_director'])) {
         if ($_POST['director_details_type'] == 'movie') {
             $storage->deleteDirectorOfMovie($_POST['director_details_id'], $_GET['id']);
+            $view->reloadPage('movie_details');
         } elseif ($_POST['director_details_type'] == 'series') {
             $storage->deleteDirectorOfSeries($_POST['director_details_id'], $_GET['id']);
+            $view->reloadPage('movie_details');
         }
     }
+}
+if (isset($_POST['submit_edit_movie'])) {
+    $movie = new Movie();
+    $movie->setID($_GET['id']);
+    $movie->setTitle($_POST['new_title']);
+    // print_r($movie);
+    $storage->editMovie($movie);
+    $view->reloadPage('movie_details');
+}
+if (isset($_POST['submit_edit_series'])) {
+    $series = new Series();
+    $series->setID($_GET['id']);
+    $series->setTitle($_POST['new_title']);
+    print_r($series);
+    $storage->editSeries($series);
+    $view->reloadPage('movie_details');
 }
 ?>
 <!doctype html>
@@ -60,6 +80,26 @@ if (isset($_POST['director_details_type'])) {
 
                 // }
                 $(document).ready(function() {
+                    $(document).on('click', '#edit_movie', function() {
+                        $('#edit_movie').remove();
+                        $('#title_heading').after('<div id="edit_div">');
+                        $('#edit_div').append('<form method="post" id="edit_form">');
+                        title = document.getElementById('title_movie').textContent;
+                        $('#edit_form').append(
+                            '<input type="text" name="new_title" value="' + title + '">',
+                            '<input type="submit" name="submit_edit_movie" value="Senden">'
+                        );
+                    });
+                    $(document).on('click', '#edit_series', function() {
+                        $('#edit_series').remove();
+                        $('#title_heading').after('<div id="edit_div">');
+                        $('#edit_div').append('<form method="post" id="edit_form">');
+                        title = document.getElementById('title_series').textContent;
+                        $('#edit_form').append(
+                            '<input type="text" name="new_title" value="' + title + '">',
+                            '<input type="submit" name="submit_edit_series" value="Senden">'
+                        );
+                    })
                     $(document).on('click', '#new_actor', function() {
                         $('#new_actor').remove();
                         // $('#new_form').remove();
@@ -72,7 +112,6 @@ if (isset($_POST['director_details_type'])) {
                         if (document.getElementById('new_director') == null) {
                             $('#new_director_form').before('<button id="new_director" class="btn btn-success">Regisseur hinzufügen</button>');
                             $('#new_director_form').empty();
-
                         }
                     });
                     $(document).on('click', '#new_director', function() {

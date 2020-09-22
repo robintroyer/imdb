@@ -493,4 +493,25 @@ class Database implements StorageInterface
         VALUES ('$director', '$series')";
         $this->conn->query($sql);
     }
+    public function editPerson($person)
+    {
+        $sql = "UPDATE persons
+        SET `name` = '" . $person->getName() . "', bio = '" . $person->getBio() . "'
+        WHERE id = '" . $person->getID() . "'";
+        $this->conn->query($sql);
+    }
+    public function editMovie($movie)
+    {
+        $sql = "UPDATE movies
+        SET title = '" . $movie->getTitle() . "'
+        WHERE id = '" . $movie->getID() . "'";
+        $this->conn->query($sql);
+    }
+    public function editSeries($series)
+    {
+        $sql = "UPDATE series
+        SET title = '" . $series->getTitle() . "'
+        WHERE id = '" . $series->getID() . "'";
+        $this->conn->query($sql);
+    }
 }

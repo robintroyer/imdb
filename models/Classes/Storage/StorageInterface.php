@@ -40,4 +40,7 @@ interface StorageInterface
     public function addDirectorToMovie($director, $movie);
     public function addActorToSeries($actor, $series);
     public function addDirectorToSeries($director, $series);
+    public function editPerson($person);
+    public function editMovie($movie);
+    public function editSeries($series);
 }
