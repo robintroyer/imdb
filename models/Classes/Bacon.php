@@ -9,6 +9,7 @@ class Bacon
     private $used_series_ids;
     private $depth;
     private $connection;
+    private $connection_found;
     public function __construct($storage)
     {
         $this->storage = $storage;
@@ -48,7 +49,11 @@ class Bacon
             foreach ($series_first as $series) {
                 $this->compareSeries($first, $series, $series_second, $second);
             }
-            return $this->connection;
+            if ($this->connection_found) {
+                return $this->connection;
+            } else {
+                return 'Bacon Nummer nicht vorhanden';
+            }        
         }
     }
 
@@ -60,6 +65,8 @@ class Bacon
                 array_unshift($this->connection, $first);
             }
             $this->connection[] = $second;
+            // if successful return
+            $this->connection_found = true;
             return $this->connection;
         } else {
             $actors = $this->storage->getActorsOfSeries($series->getID());

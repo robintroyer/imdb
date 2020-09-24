@@ -46,7 +46,9 @@ if (isset($_POST['submit_bacon'])) {
     $b = $bacon->getRelation($_POST['first'], $_POST['second']);
     print_r($b);
     // echo count($b);
-    echo '<br />Bacon Number: ' . (count($b) - 1);
+    if (is_array($b)) {
+        echo '<br />Bacon Nummer: ' . (count($b) - 1);
+    }
     // echo count($bacon->getRelation($_POST['first'], $_POST['second']));
     // $bacon->getRelation($_POST['first'], $_POST['second']);
 }
