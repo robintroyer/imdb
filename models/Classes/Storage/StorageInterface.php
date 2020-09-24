@@ -43,4 +43,7 @@ interface StorageInterface
     public function editPerson($person);
     public function editMovie($movie);
     public function editSeries($series);
+
+    // Bacon
+    public function getSeriesOfActor($actor);
 }

@@ -8,12 +8,14 @@ $configDB->name = $DB_NAME;
 $storage->initialize($configDB);
 $form = new Form($storage);
 $view = new View($storage);
+// $bacon = new Bacon($storage);
 $form->newPerson();
 $form->newMovie();
 $view->showButtons($storage->getMovies(), $storage->getSeries(), $storage->getActors(), $storage->getDirectors(), $storage->getPersons());
 if (isset($_POST['details'])) {
     $view->showDetails();
 }
+
 if (
     isset($_POST['person_details'])
     || isset($_POST['director_details'])
@@ -34,4 +36,17 @@ if (isset($_POST['delete_series'])) {
 }
 if (isset($_POST['delete_person'])) {
     $storage->deletePerson($_POST['person_details_id']);
+}
+if (isset($_POST['submit_bacon'])) {
+    $bacon = new Bacon($storage);
+    // echo $bacon->getRelation($_POST['first'], $_POST['second']);
+    // print_r($bacon->getRelation($_POST['first'], $_POST['second']));
+    
+    // $connection[] = $_POST['first'];
+    $b = $bacon->getRelation($_POST['first'], $_POST['second']);
+    print_r($b);
+    // echo count($b);
+    echo '<br />Bacon Number: ' . (count($b) - 1);
+    // echo count($bacon->getRelation($_POST['first'], $_POST['second']));
+    // $bacon->getRelation($_POST['first'], $_POST['second']);
 }

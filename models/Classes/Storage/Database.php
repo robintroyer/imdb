@@ -521,4 +521,26 @@ class Database implements StorageInterface
         WHERE id = '" . $series->getID() . "'";
         $this->conn->query($sql);
     }
+
+    // Bacon
+    public function getSeriesOfActor($actor)
+    {
+        $sql = "SELECT actor_id, series_id, id, title
+        FROM series_cast
+        INNER JOIN series ON series.id = series_cast.series_id
+        WHERE actor_id = '$actor'";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $series = [];
+            while ($row = $result->fetch_assoc()) {
+                $s = new Series();
+                $s->setID($row['series_id']);
+                $s->setTitle($row['title']);
+                $series[] = $s;
+            }
+        }
+        if (!empty($series)) {
+            return $series;
+        }
+    }
 }
