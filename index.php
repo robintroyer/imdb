@@ -39,16 +39,15 @@ if (isset($_POST['delete_person'])) {
 }
 if (isset($_POST['submit_bacon'])) {
     $bacon = new Bacon($storage);
-    // echo $bacon->getRelation($_POST['first'], $_POST['second']);
-    // print_r($bacon->getRelation($_POST['first'], $_POST['second']));
-    
-    // $connection[] = $_POST['first'];
-    $b = $bacon->getRelation($_POST['first'], $_POST['second']);
-    print_r($b);
-    // echo count($b);
-    if (is_array($b)) {
-        echo '<br />Bacon Nummer: ' . (count($b) - 1);
+    // $bacon->getGenerations($_POST['first']);
+    $bacon_number = $bacon->createArray($_POST['first']);
+    if ($bacon_number) {
+        echo 'Bacon Nummer: ' . $bacon_number;
+    } else {
+        echo 'Bacon Nummer existiert nicht.';
     }
-    // echo count($bacon->getRelation($_POST['first'], $_POST['second']));
-    // $bacon->getRelation($_POST['first'], $_POST['second']);
+    // $b = $bacon->getRelation($_POST['first'], $_POST['second']);
+    // if (is_array($b)) {
+    //     $c = $bacon->changeArray();
+    // }
 }
