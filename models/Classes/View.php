@@ -26,6 +26,7 @@ class View
                 <input type="submit" name="button_directors" value="Regisseure" class="btn btn-secondary">
                 <input type="submit" name="button_persons" value="Personen" class="btn btn-secondary">
                 <input type="submit" name="button_bacon" value="Bacon Number" class="btn btn-secondary">
+                <input type="submit" name="button_moviedb" value="The Movie DB" class="btn btn-secondary">
               </div>';
         echo '</form>';
         if (isset($_POST['button_movie'])) {
@@ -41,7 +42,9 @@ class View
         } elseif (isset($_POST['button_bacon'])) {
             $bacon = new Bacon($this->storage);
             $bacon->showForm();
-            
+        } elseif (isset($_POST['button_moviedb'])) {
+            $bacon = new Bacon($this->storage);
+            $bacon->theMovieDBForm();
         }
     }
     public function showPersons($persons)

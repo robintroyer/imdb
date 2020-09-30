@@ -41,7 +41,7 @@ if (isset($_POST['submit_bacon'])) {
     $bacon = new Bacon($storage);
     // $bacon->getGenerations($_POST['first']);
     $bacon_number = $bacon->createArray($_POST['first']);
-    if ($bacon_number) {
+    if ($bacon_number !== false) {
         echo 'Bacon Nummer: ' . $bacon_number;
     } else {
         echo 'Bacon Nummer existiert nicht.';
@@ -50,4 +50,8 @@ if (isset($_POST['submit_bacon'])) {
     // if (is_array($b)) {
     //     $c = $bacon->changeArray();
     // }
+}
+if (isset($_POST['actor_submit'])) {
+    $bacon = new Bacon($storage);
+    $bacon->theMovieDB($_POST['actor_name']);
 }

@@ -25,16 +25,20 @@ class Database implements StorageInterface
         $movie_id = $this->conn->insert_id;
         if ($actors) {
             foreach ($actors as $actor) {
-                $sql = "INSERT INTO movies_cast
-                VALUES ('" . $actor . "', '$movie_id')";
-                $this->conn->query($sql);
+                if ($actor > 0) {
+                    $sql = "INSERT INTO movies_cast
+                    VALUES ('" . $actor . "', '$movie_id')";
+                    $this->conn->query($sql);
+                }
             }
         }
         if ($directors) {
             foreach ($directors as $director) {
-                $sql = "INSERT INTO movies_directors
-                VALUES ('$director', '$movie_id')";
-                $this->conn->query($sql);
+                if ($director > 0) {
+                    $sql = "INSERT INTO movies_directors
+                    VALUES ('$director', '$movie_id')";
+                    $this->conn->query($sql);
+                }
             }
         }  
     }

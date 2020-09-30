@@ -1,34 +1,83 @@
 <?php
 class Bacon
 {
-    // private $first;
-    // private $second;
     private $storage;
-    // private $counter;
-    // private $used_person_ids;
-    // private $used_series_ids;
-    // private $depth;
-    // private $connection;
-    // private $connection_found;
     private $tree;
     private $used_persons;
     private $used_series;
+    private $used_movies;
+    private $used_directed_series;
+    private $used_directed_movies;
     private $array = [];
     private $depth;
 
     public function __construct($storage)
     {
         $this->storage = $storage;
-        $this->counter = 0;
-        $this->used_person_ids = [];
-        $this->used_series_ids = [];
         $this->depth = 0;
-        $this->connection = [];
         $this->tree = [];
         $this->used_persons = [];
         $this->used_series = [];
+        $this->used_movies = [];
+        $this->used_directed_series = [];
+        $this->used_directed_movies = [];
         $this->array = [];
     }
+    public function theMovieDBForm()
+    {
+        echo '<form method="post">';
+        echo '<input type="text" name="actor_name">';
+        echo '<input type="submit" name="actor_submit">';
+        echo '</form>';
+    }
+    public function theMovieDB($actor)
+    {
+        // https://image.tmdb.org/t/p/original/ywH1VvdwqlcnuwUVr0pV0HUZJQA.jpg
+        $content = file_get_contents('https://api.themoviedb.org/3/search/person?api_key=906d85a2d561a1998026d96bbee93f3d&query=' . urlencode($actor));
+        $content = json_decode($content);
+        foreach ($content->results as $cont) {
+            // print_r($cont);
+            echo '<h2>' . $cont->name . '</h2>';
+            echo '<img heigth="200px" width="200px" src="https://image.tmdb.org/t/p/original' . $cont->profile_path . '" alt="' . $cont->name . '">';
+            $movies = file_get_contents('https://api.themoviedb.org/3/person/'
+            . $cont->id . '/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
+            $movies = json_decode($movies);
+            echo '<h3>Filme:</h3>';
+            echo '<table class="table">';
+            echo '<tbody>';
+            foreach ($movies->cast as $movie) {
+                echo '<tr>';
+                echo '<form method="post">';
+                echo '<td>' . $movie->title . '</td>';
+                echo '<td><input type="submit" name="movie" value="Details">
+                <input type="hidden" name="movie_hidden" value="' . $movie->id . '"></td>';
+                echo '</form>';
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
+            $series = file_get_contents('https://api.themoviedb.org/3/person/'
+            . $cont->id . '/tv_credits?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
+            $series = json_decode($series);
+            echo '<br /><h3>Serien:</h3>';
+            echo '<table class="table">';
+            echo '<tbody>';
+            foreach ($series->cast as $s) {
+                echo '<tr>';
+                echo '<form method="post">';
+                echo '<td>' . $s->name . '</td>';
+                echo '<td><input type="submit" name="series" value="Details">
+                <input type="hidden" name="series_hidden" value="' . $s->id . '"></td>';
+                echo '</form>';
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
+            break;
+        }
+    }
+
+
     public function showForm()
     {
         echo '<form method="post">';
@@ -52,19 +101,111 @@ class Bacon
         $this->array[] = $first;
         $this->used_persons[] = $first;
         $persons_of_gen = [];
-        $series = $this->storage->getSeriesOfActor($first);
-        foreach ($series as $s) {
-            if (!in_array($s->getID(), $this->used_series)) {
-                $this->used_series[] = $s->getID();
-                $persons = $this->storage->getActorsOfSeries($s->getID());
-                foreach ($persons as $person) {
-                    if (!in_array($person->getID(), $this->used_persons)) {
-                        $this->used_persons[] = $person->getID();
-                        $persons_of_gen[] = $person->getID();
+        $series = $this->storage->getSeriesOfPerson($first);
+        if ($series) {
+            foreach ($series as $s) {
+                if (!in_array($s->getID(), $this->used_series)) {
+                    $this->used_series[] = $s->getID();
+                    $persons = $this->storage->getActorsOfSeries($s->getID());
+                    if ($persons) {
+                        foreach ($persons as $person) {
+                            if (!in_array($person->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $person->getID();
+                                $persons_of_gen[] = $person->getID();
+                            }
+                        }
+                    }
+                    $directors = $this->storage->getDirectorsOfSeries($s->getID());
+                    if ($directors) {
+                        foreach ($directors as $director) {
+                            if (!in_array($director->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $director->getID();
+                                $persons_of_gen[] = $director->getID();
+                            }
+                        }
                     }
                 }
             }
         }
+        $directed_series = $this->storage->getDirectedSeriesOfPerson($first);
+        if ($directed_series) {
+            foreach ($directed_series as $directed_s) {
+                if (!in_array($directed_s->getID(), $this->used_directed_series)) {
+                    $this->used_directed_series[] = $directed_s->getID();
+                    $persons = $this->storage->getActorsOfSeries($directed_s->getID());
+                    if ($persons) {
+                        foreach ($persons as $person) {
+                            if (!in_array($person->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $person->getID();
+                                $persons_of_gen[] = $person->getID();
+                            }
+                        }
+                    }
+                    $directors = $this->storage->getDirectorsOfSeries($directed_s->getID());
+                    if ($directors) {
+                        foreach ($directors as $director) {
+                            if (!in_array($director->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $director->getID();
+                                $persons_of_gen[] = $director->getID();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $movies = $this->storage->getMoviesOfPerson($first);
+        if ($movies) {
+            foreach ($movies as $movie) {
+                if (!in_array($movie->getID(), $this->used_movies)) {
+                    $this->used_movies[] = $movie->getID();
+                    $persons = $this->storage->getActorsOfMovie($movie->getID());
+                    if ($persons) {
+                        foreach ($persons as $person) {
+                            if (!in_array($person->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $person->getID();
+                                $persons_of_gen[] = $person->getID();
+                            }
+                        }
+                    }
+                    $directors = $this->storage->getDirectorsOfMovie($movie->getID());
+                    if ($directors) {
+                        foreach ($directors as $director) {
+                            if (!in_array($director->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $director->getID();
+                                $persons_of_gen[] = $director->getID();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $directed_movies = $this->storage->getDirectedMoviesOfPerson($first);
+        if ($directed_movies) {
+            foreach ($directed_movies as $directed_movie) {
+                if (!in_array($directed_movie->getID(), $this->used_directed_movies)) {
+                    $this->used_directed_movies[] = $directed_movie->getID();
+                    $persons = $this->storage->getActorsOfMovie($directed_movie->getID());
+                    if ($persons) {
+                        foreach ($persons as $person) {
+                            if (!in_array($person->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $person->getID();
+                                $persons_of_gen[] = $person->getID();
+                            }
+                        }
+                    }
+                    $directors = $this->storage->getDirectorsOfMovie($directed_movie->getID());
+                    if ($directors) {
+                        foreach ($directors as $director) {
+                            if (!in_array($director->getID(), $this->used_persons)) {
+                                $this->used_persons[] = $director->getID();
+                                $persons_of_gen[] = $director->getID();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         $this->array[1] = $persons_of_gen;
         $this->newGeneration($this->array[1], $persons_of_gen);
         return $this->depth;
@@ -72,16 +213,56 @@ class Bacon
     private function newGeneration(&$array, $persons)
     {
         $persons_of_gen = [];
-        foreach ($persons as $person) {
-            $series = $this->storage->getSeriesOfActor($person);
-            foreach ($series as $s) {
-                if (!in_array($s->getID(), $this->used_series)) {
-                    $this->used_series[] = $s->getID();
-                    $actors = $this->storage->getActorsOfSeries($s->getID());
-                    foreach ($actors as $actor) {
-                        if (!in_array($actor->getID(), $this->used_persons)) {
-                            $this->used_persons[] = $actor->getID();
-                            $persons_of_gen[] = $actor->getID();
+        if ($persons) {
+            foreach ($persons as $person) {
+                $series = $this->storage->getSeriesOfPerson($person);
+                if ($series) {
+                    foreach ($series as $s) {
+                        if (!in_array($s->getID(), $this->used_series)) {
+                            $this->used_series[] = $s->getID();
+                            $actors = $this->storage->getActorsOfSeries($s->getID());
+                            foreach ($actors as $actor) {
+                                if (!in_array($actor->getID(), $this->used_persons)) {
+                                    $this->used_persons[] = $actor->getID();
+                                    $persons_of_gen[] = $actor->getID();
+                                }
+                            }
+                            $directors = $this->storage->getDirectorsOfSeries($s->getID());
+                            if ($directors) {
+                                foreach ($directors as $director) {
+                                    if (!in_array($director->getID(), $this->used_persons)) {
+                                        $this->used_persons[] = $director->getID();
+                                        $persons_of_gen[] = $director->getID();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                $movies = $this->storage->getMoviesOfPerson($person);
+                if ($movies) {
+                    foreach ($movies as $movie) {
+                        if (!in_array($movie->getID(), $this->used_movies)) {
+                            $this->used_movies[] = $movie->getID();
+                            $actors = $this->storage->getActorsOfMovie($movie->getID());
+                            if ($actors) {
+                                foreach ($actors as $actor) {
+                                    if (!in_array($actor->getID(), $this->used_persons)) {
+                                        $this->used_persons[] = $actor->getID();
+                                        $persons_of_gen[] = $actor->getID();
+                                    }
+                                }
+                            }
+                        }
+                        $directors = $this->storage->getDirectorsOfMovie($movie->getID());
+                        if ($directors) {
+                            foreach ($directors as $director) {
+                                if (!in_array($director->getID(), $this->used_persons)) {
+                                    $this->used_persons[] = $director->getID();
+                                    $persons_of_gen[] = $actor->getID();
+                                    
+                                }
+                            }
                         }
                     }
                 }
@@ -92,21 +273,33 @@ class Bacon
             $this->newGeneration($array[count($array) - 1], $persons_of_gen);
         } else {
             $this->depth = $this->getDepth($this->array, 0);
+            // var_dump(highlight_string("<?\n". var_export($this->array, true)));
+            // var_dump(highlight_string("<?\n". var_export($this->used_persons, true)));
         }
     }
 
     private function getDepth($array, $depth)
     {
+        
         $looking_for = $_POST['second'];
         foreach ($array as $value) {
             if (!is_array($value)) {
                 if ($value == $looking_for) {
+                    // echo $depth;
                     return $depth;
                 }
             }
         }
         $depth++;
-        return $this->getDepth($array[count($array) - 1], $depth);
+        // var_dump(highlight_string("<?\n". var_export($array, true)));
+        if (
+            is_array($array[count($array) - 1])
+            && !empty($array[count($array) - 1])
+        ) {
+            return $this->getDepth($array[count($array) - 1], $depth);
+        } else {
+            return 'existiert nicht';
+        }
         
     }
 
