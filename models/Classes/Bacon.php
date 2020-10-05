@@ -11,6 +11,11 @@ class Bacon
     private $array = [];
     private $depth;
 
+    private $nodes;
+    private $curl_arr;
+    private $results;
+    private $node_count;
+
     public function __construct($storage)
     {
         $this->storage = $storage;
@@ -22,13 +27,19 @@ class Bacon
         $this->used_directed_series = [];
         $this->used_directed_movies = [];
         $this->array = [];
+
+        $this->nodes = [];
+        $this->curl_arr = [];
+        $this->results = [];
+        $this->node_count = 0;
     }
     public function theMovieDBForm()
     {
-        echo '<form method="post">';
+        echo '<form method="get">';
         echo '<input type="text" name="actor_name">';
-        echo '<input type="submit" name="actor_submit">';
+        echo '<input type="submit">';
         echo '</form>';
+        // unset($_GET['actor_submit']);
     }
     public function theMovieDB($actor)
     {
@@ -43,57 +54,405 @@ class Bacon
             . $cont->id . '/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
             $movies = json_decode($movies);
             echo '<h3>Filme:</h3>';
-            echo '<table class="table">';
-            echo '<tbody>';
+            echo '
+                <div class="album py-5 bg-light">
+                    <div class="container">
+                        <div class="row">';
             foreach ($movies->cast as $movie) {
-                echo '<tr>';
-                echo '<form method="post">';
-                echo '<td>' . $movie->title . '</td>';
-                echo '<td><input type="submit" name="movie" value="Details">
-                <input type="hidden" name="movie_hidden" value="' . $movie->id . '"></td>';
+                echo '<div class="card" style="width: 18 rem;">';
+                echo '<img style="width: 200px;" src="https://image.tmdb.org/t/p/original' . $movie->poster_path . '" alt="' . $movie->title . '">';
+                echo '<div class="card-body">';
+                echo '<h5>' . $movie->title . '</h5>';
+                unset($_GET['actor_name']);
+                echo '<form method="get">';
+                echo '<input type="submit" value="Details">
+                <input type="hidden" name="movie" value="' . $movie->id . '">';
                 echo '</form>';
-                echo '</tr>';
+                echo '</div></div>';
             }
-            echo '</tbody>';
-            echo '</table>';
+            echo '</div></div></div>';
             $series = file_get_contents('https://api.themoviedb.org/3/person/'
             . $cont->id . '/tv_credits?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
             $series = json_decode($series);
             echo '<br /><h3>Serien:</h3>';
-            echo '<table class="table">';
-            echo '<tbody>';
+            echo '
+                <div class="album py-5 bg-light">
+                    <div class="container">
+                        <div class="row">';
             foreach ($series->cast as $s) {
-                echo '<tr>';
-                echo '<form method="post">';
-                echo '<td>' . $s->name . '</td>';
-                echo '<td><input type="submit" name="series" value="Details">
-                <input type="hidden" name="series_hidden" value="' . $s->id . '"></td>';
+                echo '<div class="card" style="width:18rem;">';
+                echo '<img style="width: 200px;" src="https://image.tmdb.org/t/p/original' . $s->poster_path . '" alt="' . $s->name . '">';
+                echo '<div class="card-body">';
+                unset($_GET['actor_name']);
+                echo '<h5>' . $s->name . '</h5>';
+                echo '<form method="get">';
+                echo '<input type="submit" value="Details">
+                <input type="hidden" name="series" value="' . $s->id . '">';
                 echo '</form>';
-                echo '</tr>';
+                echo '</div></div>';
             }
-            echo '</tbody>';
-            echo '</table>';
+            echo '</div></div></div>';
+           
             break;
         }
+
+        
+    }
+
+    public function showMovie($movie)
+    {
+        $details = file_get_contents('https://api.themoviedb.org/3/movie/' . $movie . '?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
+        // print_r($details);
+        $details = json_decode($details);
+        echo '<h1>' . $details->original_title . '</h1>';
+        echo '<img height="300px" width="auto" alt="' . $details->original_title . '" src="https://image.tmdb.org/t/p/original' . $details->poster_path . '">';
+        $cast = file_get_contents('https://api.themoviedb.org/3/movie/' . $movie . '/credits?api_key=906d85a2d561a1998026d96bbee93f3d');
+        $cast = json_decode($cast);
+        echo '<h3>Schauspieler:</h3>';
+        echo '
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row">';
+        foreach ($cast->cast as $c) {
+            echo '<div class="card" style="width: 18 rem;">';
+            echo '<img style="width: 200px;" src="https://image.tmdb.org/t/p/original' . $c->profile_path . '" alt="' . $c->name . '">';
+            echo '<div class="card-body">';
+            echo '<h5 class="card-title">' . $c->name . '</h5>';
+            echo '<form method="get">';
+            echo '<input class="btn btn-primary" value="Details" type="submit">';
+            echo '<input type="hidden" name="actor_id" value="' . $c->id . '">';
+            echo '</form>';
+            echo '</div>';
+            echo '</div>';
+        }
+        echo '</div></div></div>';
+    }
+    public function showSeries($series)
+    {
+        $details = file_get_contents('https://api.themoviedb.org/3/tv/' . $series . '?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
+        $details = json_decode($details);
+        echo $details->number_of_seasons;
+        echo '<br />';
+        echo $details->number_of_episodes;
+        echo '<h1>' . $details->name . '</h1>';
+        echo '<img height="300px" width="auto" alt="' . $details->name . '" src="https://image.tmdb.org/t/p/original' . $details->poster_path . '">';
+        $cast = [];
+        for ($i = 1; $i <= $details->number_of_seasons; $i++) {
+            $season = file_get_contents('https://api.themoviedb.org/3/tv/' . $series . '/season/'
+            . $i . '?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
+            $season = json_decode($season); 
+            for ($j = 1; $j <= count($season->episodes); $j++) {
+                $episode_cast = file_get_contents('https://api.themoviedb.org/3/tv/'
+                . $series . '/season/' . $i . '/episode/' . $j . '/credits?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
+                $episode_cast = json_decode($episode_cast);
+                foreach ($episode_cast->cast as $episode_c) {
+                    $cast[] = $episode_c;
+                }
+                foreach ($episode_cast->guest_stars as $guest) {
+                    $cast[] = $guest;
+                }
+            }
+            
+        }
+        $cast2 = [];
+        $used_cast_ids = [];
+        foreach ($cast as $c) {
+            if (!in_array($c->id, $used_cast_ids)) {
+                $used_cast_ids[] = $c->id;
+                $cast2[] = $c;
+            }
+        }
+        $cast = $cast2;
+        echo '<h3>Schauspieler:</h3>';
+        echo '
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row">';
+        foreach ($cast as $c) {
+            echo '<div class="card" style="width: 18 rem;">';
+            echo '<img style="width: 200px;" src="https://image.tmdb.org/t/p/original' . $c->profile_path . '" alt="' . $c->name . '">';
+            echo '<div class="card-body">';
+            echo '<h5 class="card-title">' . $c->name . '</h5>';
+            echo '<form method="get">';
+            echo '<input class="btn btn-primary" value="Details" type="submit">';
+            echo '<input type="hidden" name="actor_id" value="' . $c->id . '">';
+            echo '</form>';
+            echo '</div>';
+            echo '</div>';
+        }
+        echo '</div></div></div>';
+    }
+
+    public function objectInArray($needle, $haystack)
+    {
+        foreach ($haystack as $h) {
+            if ($needle === $h->id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getActorName($id)
+    {
+        $actor = file_get_contents('https://api.themoviedb.org/3/person/' . $id . '?api_key=906d85a2d561a1998026d96bbee93f3d&language=en-US');
+        $actor = json_decode($actor);
+        // print_r($actor);
+        return $actor->name;
     }
 
 
     public function showForm()
     {
+        // echo '<form method="post">';
+        // echo '<select name="first">';
+        // $persons = $this->storage->getPersons();
+        // foreach ($persons as $person) {
+        //     echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
+        // }
+        // echo '</select>';
+        // echo '<select name="second">';
+        // foreach ($persons as $person) {
+        //     echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
+        // }
+        // echo '</select>';
+        // echo '<input type="submit" name="submit_bacon">';
+        // echo '</form>';
+
         echo '<form method="post">';
-        echo '<select name="first">';
-        $persons = $this->storage->getPersons();
-        foreach ($persons as $person) {
-            echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
-        }
-        echo '</select>';
-        echo '<select name="second">';
-        foreach ($persons as $person) {
-            echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
-        }
-        echo '</select>';
+        echo '<input type="text" name="first">';
+        echo '<input type="text" name="second">';
         echo '<input type="submit" name="submit_bacon">';
+        echo '<input type="submit" name="test" value="TEST">';
         echo '</form>';
+    }
+
+    public function getBacon()
+    {
+        $first = $_POST['first'];
+        $second = $_POST['second'];
+        $used_actors = [];
+        $used_movies = [];
+        $counter = 0;
+        $all_movies_casts = [];
+        $context = stream_context_create(['http' => ['header' => 'Connection: close\r\n']]);
+
+        if ($first == $second) {
+            return $counter;
+        } else {
+            $counter++;
+        }
+
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, 'https://api.themoviedb.org/3/search/person?api_key=906d85a2d561a1998026d96bbee93f3d&query=' . urlencode($first));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $person = curl_exec($ch);
+        $person = json_decode($person);
+        curl_close($ch);
+
+        // $person = file_get_contents('https://api.themoviedb.org/3/search/person?api_key=906d85a2d561a1998026d96bbee93f3d&query=' . urlencode($first), false, $context);
+        // $person = json_decode($person);
+        
+        // print_r($person);
+        foreach ($person->results as $p) {
+            $person_id = $p->id;
+            // echo $person_id;
+            $used_actors[] = $person_id;
+            break;
+        }
+
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, 'https://api.themoviedb.org/3/search/person?api_key=906d85a2d561a1998026d96bbee93f3d&query=' . urlencode($second));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $second_person = curl_exec($ch);
+        $second_person = json_decode($second_person);
+        curl_close($ch);
+
+        // $second_person = file_get_contents('https://api.themoviedb.org/3/search/person?api_key=906d85a2d561a1998026d96bbee93f3d&query=' . urlencode($second), false, $context);
+        // $second_person = json_decode($second_person);
+        foreach ($second_person->results as $second_p) {
+            $second_person_id = $second_p->id;
+            // echo $second_person_id;
+            break;
+        }
+
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, 'https://api.themoviedb.org/3/person/'
+        . $person_id . '/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $movies_of_person = curl_exec($ch);
+        $movies_of_person = json_decode($movies_of_person);
+        curl_close($ch);
+
+        // $movies_of_person = file_get_contents('https://api.themoviedb.org/3/person/'
+        // . $person_id . '/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d', false, $context);
+        // $movies_of_person = json_decode($movies_of_person);
+
+        foreach ($movies_of_person->cast as $movie_of_person) {
+            $movie_id = $movie_of_person->id;
+            if (!in_array($movie_id, $used_movies)) {
+                $used_movies[] = $movie_id;
+                $ch = curl_init();
+                $timeout = 5;
+                curl_setopt($ch, CURLOPT_URL, 'https://api.themoviedb.org/3/movie/' . $movie_id . '/credits?api_key=906d85a2d561a1998026d96bbee93f3d');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                $movie_cast = curl_exec($ch);
+                $movie_cast = json_decode($movie_cast);
+                curl_close($ch);
+                // $movie_cast = file_get_contents('https://api.themoviedb.org/3/movie/' . $movie_id . '/credits?api_key=906d85a2d561a1998026d96bbee93f3d', false, $context);
+                // $movie_cast = json_decode($movie_cast);
+                foreach ($movie_cast->cast as $cast) {
+                    if (!in_array($cast->id, $used_actors)) {
+                        $used_actors[] = $cast->id;
+                        $all_movies_casts[] = $cast;
+                        // echo $cast->id . '<br />';
+                        // echo $second_person_id . '<br />';
+                        // echo $cast->id . '<br />';
+                        if ($second_person_id == $cast->id) {
+                            return $counter;
+                        }
+                    }
+                }
+            }
+        }
+        // print_r($all_movies_casts);
+        $test_counter = 0;
+        $start = microtime(true);
+
+        // $nodes = [];
+
+        // print_r($all_movies_casts);
+        
+        foreach ($all_movies_casts as $cast) {
+            $this->nodes[] = 'https://api.themoviedb.org/3/person/' . $cast->id . '/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d';
+            // echo $cast->name . '<br />';
+        }
+        // echo '<br />';
+        // echo count($this->nodes);
+        // echo '<br />';
+        // $this->node_count = count($this->nodes);
+        $this->nextGen($second_person_id, $counter);
+
+        // print_r($nodes);
+        // $node_count = count($this->nodes);
+        // $curl_arr = [];
+        // $results = [];
+        // $master = curl_multi_init();
+        // for ($i = 0; $i < $node_count; $i++) {
+        //     $url = $this->nodes[$i];
+        //     $curl_arr[$i] = curl_init($url);
+        //     curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
+        //     curl_multi_add_handle($master, $curl_arr[$i]);
+        // }
+        // do {
+        //     curl_multi_exec($master, $running);
+        // } while ($running > 0);
+        // for ($i = 0; $i < $node_count; $i++) {
+        //     $results[] = curl_multi_getcontent($curl_arr[$i]);
+        // }
+        // print_r($results);
+
+        echo microtime(true) - $start;
+        if ($counter) {
+            return $counter;
+        } else {
+            return 'Keine Bacon Nummer gefunden.';
+        }
+        
+    }
+
+    // public function test()
+    // {
+        // $fp = fsockopen('https://api.themoviedb.org/3/person/73968/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d', 80, $errno, $errstr, 30);
+        // if (!$fp) {
+        //     echo "$errstr ($errno)<br />\n";
+        // } else {
+        //     $out = "GET / HTTP/1.1\r\n";
+        //     $out .= "Host: http://localhost/imdb/home.php\r\n";
+        //     $out .= "Connection: Close\r\n\r\n";
+        //     fwrite($fp, $out);
+        //     while (!feof($fp)) {
+        //         echo fgets($fp, 128);
+        //     }
+        //     fclose($fp);
+        // }
+
+
+
+
+
+
+        // $ch = curl_init();
+        // $timeout = 5;
+        // curl_setopt($ch, CURLOPT_URL, 'https://api.themoviedb.org/3/person/73968/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d');
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        // $data = curl_exec($ch);
+        // $data = json_decode($data);
+        // // curl_close($ch);
+
+        // $data = json_decode($data);
+        // print_r($data);
+    // }
+
+    public function nextGen($second_id, &$counter)
+    {
+
+        $node_count = count($this->nodes);
+        $curl_arr = [];
+        $results = [];
+        $master = curl_multi_init();
+        for ($i = 0; $i < $node_count; $i++) {
+            $url = $this->nodes[$i];
+            $curl_arr[$i] = curl_init($url);
+            curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
+            curl_multi_add_handle($master, $curl_arr[$i]);
+        }
+        do {
+            curl_multi_exec($master, $running);
+        } while ($running > 0);
+        for ($i = 0; $i < $node_count; $i++) {
+            $results[] = curl_multi_getcontent($curl_arr[$i]);
+        }
+        // $results = json_decode($results);
+        print_r($results);
+        $nodes = [];
+        // foreach ($results as $result) {
+        //     foreach ($result->cast as $res) {
+        //         echo $res->id . '<br />';
+        //     }
+        //     // echo $result->cast->id . '<br />';
+        // //     $nodes[] = 'https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=906d85a2d561a1998026d96bbee93f3d';
+        // }
+        // echo '<br />';
+        // echo count($results);
+        // echo '<br />';
+        // print_r($results);
+        // $context = stream_context_create(['http' => ['header' => 'Connection: close\r\n']]);
+
+        // request token: 044699e61f3fd456f85c43583b6899621eb780bd
+
+        // echo $counter;
+        // $ch = curl_init();
+        // $timeout = 5;
+        // curl_setopt($ch, CURLOPT_URL, 'https://api.themoviedb.org/3/person/' . $id . '/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d');
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        // $movies = curl_exec($ch);
+        // $movies = json_decode($movies);
+        // curl_close($ch);
+        
+        // $movies = file_get_contents('https://api.themoviedb.org/3/person/' . $id . '/movie_credits?api_key=906d85a2d561a1998026d96bbee93f3d', false, $context);
+        // $movies = json_decode($movies);
+        // print_r($movies);
+        // echo '<br /><br /><br /><br /><br /><br />';
     }
 
     public function createArray($first)
@@ -208,6 +567,7 @@ class Bacon
         
         $this->array[1] = $persons_of_gen;
         $this->newGeneration($this->array[1], $persons_of_gen);
+        // var_dump(highlight_string("<?\n". var_export($this->array, true)));
         return $this->depth;
     }
     private function newGeneration(&$array, $persons)

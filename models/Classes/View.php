@@ -43,8 +43,10 @@ class View
             $bacon = new Bacon($this->storage);
             $bacon->showForm();
         } elseif (isset($_POST['button_moviedb'])) {
-            $bacon = new Bacon($this->storage);
-            $bacon->theMovieDBForm();
+            // echo __DIR__ . '/tmdb.php';
+            header('location:tmdb.php');
+            // $bacon = new Bacon($this->storage);
+            // $bacon->theMovieDBForm();
         }
     }
     public function showPersons($persons)

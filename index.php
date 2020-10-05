@@ -39,18 +39,27 @@ if (isset($_POST['delete_person'])) {
 }
 if (isset($_POST['submit_bacon'])) {
     $bacon = new Bacon($storage);
-    // $bacon->getGenerations($_POST['first']);
-    $bacon_number = $bacon->createArray($_POST['first']);
-    if ($bacon_number !== false) {
-        echo 'Bacon Nummer: ' . $bacon_number;
-    } else {
-        echo 'Bacon Nummer existiert nicht.';
-    }
+    echo $bacon->getBacon();
+    // $bacon = new Bacon($storage);
+    // // $bacon->getGenerations($_POST['first']);
+    // $bacon_number = $bacon->createArray($_POST['first']);
+    // if ($bacon_number !== false) {
+    //     echo 'Bacon Nummer: ' . $bacon_number;
+    // } else {
+    //     echo 'Bacon Nummer existiert nicht.';
+    // }
     // $b = $bacon->getRelation($_POST['first'], $_POST['second']);
     // if (is_array($b)) {
     //     $c = $bacon->changeArray();
     // }
 }
+
+if (isset($_POST['test'])) {
+    $bacon = new Bacon($storage);
+    // $bacon->test();
+}
+
+
 if (isset($_POST['actor_submit'])) {
     $bacon = new Bacon($storage);
     $bacon->theMovieDB($_POST['actor_name']);
