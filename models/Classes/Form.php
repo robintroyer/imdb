@@ -8,10 +8,12 @@ class Form
     }
     public function newPerson()
     {
-        $name = '<input type="text" name="name">';
-        $bio = '<input type="text" name="bio">';
+        echo '<div id="main">';
+        $name = '<input class="main_input" type="text" name="name">';
+        $bio = '<input class="main_input" type="text" name="bio">';
         $submit = '<input type="submit">';
-        echo '<form method="post"><strong>Neue Person anlegen</strong><br />Name:<br />' . $name . '<br />Biografie:<br />' . $bio . '<br />' . $submit . '</form>';
+        echo '<form method="post"><strong class="label">Neue Person anlegen</strong><br /><span class="input_label">Name:</span>
+        <br />' . $name . '<br /><span class="input_label">Biografie:</span><br />' . $bio . '<br />' . $submit . '</form>';
         if (
             !empty($_POST['name'])
             && !empty($_POST['bio'])
@@ -25,9 +27,9 @@ class Form
     public function newMovie()
     {
         $persons = $this->storage->getPersons();
-        $title = '<input type="text" name="title">';
+        $title = '<input class="main_input" type="text" name="title">';
         $submit = '<input id="submit" type="submit" name="submit">';
-        echo '<form id="form" method="post"><strong>Film/Serie anlegen</strong><br />';
+        echo '<form id="form" method="post"><strong class="label">Film/Serie anlegen</strong><br />';
         echo '<div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="radio" id="inlineRadio1" value="movie">
                 <label class="form-check-label" for="inlineRadio1">Film</label>
@@ -36,15 +38,15 @@ class Form
                 <input class="form-check-input" type="radio" name="radio" id="inlineRadio2" value="series">
                 <label class="form-check-label" for="inlineRadio2">Serie</label>
             </div><br />';
-        echo 'Titel:<br />' . $title . '<br />';
-        echo '<label for="director">Regisseur/Produzent</label><br />';
-        echo '<select class="select_directors" name="directors[]">';
+        echo '<span class="input_label">Titel:</span><br />' . $title . '<br />';
+        echo '<label for="director"><span class="input_label">Regisseur/Produzent</span></label><br />';
+        echo '<select class="main_input_select" name="directors[]">';
         echo '<option>---</option>';
         foreach ($persons as $person) {
             echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
         }
         echo '</select><br />';
-        echo '<label id="actor_label" for="actor">Schauspieler</label><br />';
+        echo '<label id="actor_label" for="actor"><span class="input_label">Schauspieler</span></label><br />';
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
         $option_string = '';
         $option_string .= '<option>---</option>';
@@ -52,7 +54,7 @@ class Form
             $option_string .= '<option value=\'' . $person->getID() . '\'>' . $person->getName() . '</option>';
         }
         $option_string_directors = $option_string;
-        echo '<select class="select_actors" name="actors[]">';
+        echo '<select class="main_input_select" name="actors[]">';
         echo '<option>---</option>';
         foreach ($persons as $person) {
             echo '<option value="' . $person->getID() . '">' . $person->getName() . '</option>';
@@ -70,6 +72,7 @@ class Form
             });
         </script>';
         echo $submit . '</form>';
+        echo '</div>';
         if (isset($_POST['submit'])) {
             if (
                 !empty($_POST['title'])

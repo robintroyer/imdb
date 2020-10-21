@@ -62,7 +62,6 @@ if (isset($_POST['submit_edit_series'])) {
 <!doctype html>
     <html>
         <head>
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
             <script type="text/javascript">
                 persons = <?php echo json_encode($persons) ?>;
@@ -173,8 +172,9 @@ if (isset($_POST['submit_edit_series'])) {
                     });
                 })
             </script>
+            <link rel="stylesheet" href="../assets/main.css">
         </head>
         <body>
-            <button onclick="history.go(-1)">Zurück</button>
+            <button id="back" onclick="history.go(-1)"><img alt="Zurueck" src="../src/images/2x/baseline_keyboard_backspace_black_18dp.png"></button>
         </body>
     </html>

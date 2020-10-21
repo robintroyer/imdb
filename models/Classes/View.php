@@ -18,17 +18,20 @@ class View
     }
     public function showButtons($movies, $series, $actors, $directors, $persons)
     {
+        echo '<div class="button_nav">';
         echo '<form method="post">';
-        echo '<div class="btn-group" role="group" aria-label="Basic example">
-                <input type="submit" name="button_movie" value="Filme" class="btn btn-secondary">
-                <input type="submit" name="button_series" value="Serien" class="btn btn-secondary">
-                <input type="submit" name="button_actors" value="Schauspieler" class="btn btn-secondary">
-                <input type="submit" name="button_directors" value="Regisseure" class="btn btn-secondary">
-                <input type="submit" name="button_persons" value="Personen" class="btn btn-secondary">
-                <input type="submit" name="button_bacon" value="Bacon Number" class="btn btn-secondary">
-                <input type="submit" name="button_moviedb" value="The Movie DB" class="btn btn-secondary">
+        echo '<div id="button_grid" class="disabled">
+                <input type="submit" name="button_movie" value="Filme">
+                <input type="submit" name="button_series" value="Serien">
+                <input type="submit" name="button_actors" value="Schauspieler">
+                <input type="submit" name="button_directors" value="Regisseure">
+                <input type="submit" name="button_persons" value="Personen">
+                <input type="submit" name="button_bacon" value="Bacon Number">
+                <input type="submit" name="button_moviedb" value="The Movie DB">
               </div>';
         echo '</form>';
+        echo '<button onclick="addClass()"><img src="./src/images/2x/baseline_menu_black_18dp.png"></button>';
+        echo '</div>';
         if (isset($_POST['button_movie'])) {
             $this->showMovies($movies);
         } elseif (isset($_POST['button_series'])) {
@@ -51,12 +54,12 @@ class View
     }
     public function showPersons($persons)
     {
-        echo '<ul class="list-group">';
+        echo '<ul>';
         foreach ($persons as $person) {
             echo '<form method="post">';
-            echo '<li class="list-group-item">' . $person->getName()
-            . '<input value="Löschen" class="btn btn-danger" name="delete_person" type="submit" style="float:right;">
-            <input value="Details" class="btn btn-info" name="person_details" type="submit" style="float:right;">
+            echo '<li class="list_grid"><span class="name">' . $person->getName()
+            . '</span><input value="Löschen" class="button_delete" name="delete_person" type="submit" style="float:right;">
+            <input value="Details" class="button_details" name="person_details" type="submit" style="float:right;">
             <input name="person_details_id" value="' . $person->getID() . '" type="hidden" style="float:right;">
             <input name="person_details_name" value="' . $person->getName() . '" type="hidden" style="float:right;>
             <input name="person_details_bio" value="' . $person->getBio() . '" type="hidden" style="float:right;">
@@ -67,12 +70,12 @@ class View
     }
     private function showActors($actors)
     {
-        echo '<ul class="list-group">';
+        echo '<ul>';
         foreach ($actors as $actor) {
             echo '<form method="post">';
-            echo '<li class="list-group-item">' . $actor->getName()
-            . '<input value="Löschen" class="btn btn-danger" name="delete_actor" type="submit" style="float:right;">
-            <input value="Details" class="btn btn-info" name="person_details" type="submit" style="float:right;">
+            echo '<li class="list_grid"><span class="name">' . $actor->getName()
+            . '</span><input value="Löschen" class="button_delete" name="delete_actor" type="submit" style="float:right;">
+            <input value="Details" class="button_details" name="person_details" type="submit" style="float:right;">
             <input name="person_details_id" value="' . $actor->getID() . '" type="hidden" style="float:right;">
             <input name="person_details_name" value="' . $actor->getName() . '" type="hidden" style="float:right;">
             <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;">
@@ -83,12 +86,12 @@ class View
     }
     private function showDirectors($directors)
     {
-        echo '<ul class="list-group">';
+        echo '<ul>';
         foreach ($directors as $director) {
             echo '<form method="post">';
-            echo '<li class="list-group-item">' . $director->getName()
-            . '<input value="Löschen" class="btn btn-danger" name="delete_director" type="submit" style="float:right;">
-            <input value="Details" class="btn btn-info" name="director_details" type="submit" style="float:right;">
+            echo '<li class="list_grid"><span class="name">' . $director->getName()
+            . '</span><input value="Löschen" class="button_delete" name="delete_director" type="submit" style="float:right;">
+            <input value="Details" class="button_details" name="director_details" type="submit" style="float:right;">
             <input name="director_details_id" value="' . $director->getID() . '" type="hidden" style="float:right;">
             <input name="director_details_name" value="' . $director->getName() . '" type="hidden" style="float:right;">
             <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;">
@@ -99,12 +102,12 @@ class View
     }
     private function showSeries($series)
     {
-        echo '<ul class="list-group">';
+        echo '<ul>';
         foreach ($series as $s) {
             echo '<form method="post">';
-            echo '<li class="list-group-item">' . $s->getTitle()
-            . '<input value="Löschen" class="btn btn-danger" name="delete_series" type="submit" style="float:right;">
-            <input class="details btn btn-info" type="submit" name="details" value="Details">
+            echo '<li class="list_grid"><span class="name">' . $s->getTitle()
+            . '</span><input value="Löschen" class="button_delete" name="delete_series" type="submit" style="float:right;">
+            <input class="button_details" type="submit" name="details" value="Details">
             <input type="hidden" name="details_id" value="' . $s->getID() . '">
             <input type="hidden" name="details_title" value="' . $s->getTitle() . '">
             <input type="hidden" name="type" value="series">
@@ -118,12 +121,12 @@ class View
     }
     private function showMovies($movies)
     {
-        echo '<ul class="list-group">';
+        echo '<ul>';
         foreach ($movies as $movie) {
             echo '<form method="post">';
-            echo '<li class="list-group-item">' . $movie->getTitle()
-            . '<input value="Löschen" class="btn btn-danger" name="delete_movie" type="submit" style="float:right;">
-            <input class="details btn btn-info" type="submit" name="details" value="Details">
+            echo '<li class="list_grid"><span class="name">' . $movie->getTitle()
+            . '</span><input value="Löschen" class="button_delete" name="delete_movie" type="submit" style="float:right;">
+            <input class="button_details" type="submit" name="details" value="Details">
             <input type="hidden" name="details_id" value="' . $movie->getID() . '">
             <input type="hidden" name="details_title" value="' . $movie->getTitle() . '">
             <input type="hidden" name="type" value="movie">
@@ -154,15 +157,15 @@ class View
         echo '<h1 id="person_name">' . $details->getName() . '</h1>';
         echo '<h3>Biografie</h3>';
         echo '<p id="person_bio">' . $details->getBio() . '</p>';
-        echo '<button id="edit_person" class="btn btn-warning">Bearbeiten</button>';
+        echo '<button id="edit_person"><img alt="Bearbeiten" src="./src/images/1x/baseline_create_black_18dp.png"></button>';
         echo '<h4>Filme</h4>';
         if (isset($movies)) {
             echo '<ul class="list-group">';
             foreach ($movies as $movie) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $movie->getTitle()
-                . '<input value="Film entfernen" class="btn btn-danger" name="remove_movie_from_actor" type="submit" style="float:right;">
-                <input value="Details" class="btn btn-info" name="entry_details" type="submit" style="float:right;">
+                echo '<li class="list_grid"><span class="name">' . $movie->getTitle()
+                . '</span><input value="Film entfernen" class="button_delete" name="remove_movie_from_actor" type="submit" style="float:right;">
+                <input value="Details" class="button_details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $movie->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $movie->getTitle() . '">
                 <input type="hidden" name="entry_type" value="movie">
@@ -196,9 +199,9 @@ class View
             echo '<ul class="list-group">';
             foreach ($series as $s) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $s->getTitle()
-                . '<input value="Serie entfernen" class="btn btn-danger" name="remove_series_from_actor" type="submit" style="float:right;">
-                <input value="Details" class="btn btn-info" name="entry_details" type="submit" style="float:right;">
+                echo '<li class="list_grid"><span class="name">' . $s->getTitle()
+                . '</span><input value="Serie entfernen" class="button_delete" name="remove_series_from_actor" type="submit" style="float:right;">
+                <input value="Details" class="button_details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $s->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $s->getTitle() . '">
                 <input type="hidden" name="entry_type" value="series">
@@ -229,9 +232,9 @@ class View
             echo '<ul class="list-group">';
             foreach ($directed_movies as $directed_movie) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $directed_movie->getTitle()
-                . '<input value="Film entfernen" class="btn btn-danger" name="remove_movie_from_director" type="submit" style="float:right;">
-                <input value="Details" class="btn btn-info" name="entry_details" type="submit" style="float:right;">
+                echo '<li class="list_grid"><span class="name">' . $directed_movie->getTitle()
+                . '</span><input value="Film entfernen" class="button_delete" name="remove_movie_from_director" type="submit" style="float:right;">
+                <input value="Details" class="button_details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $directed_movie->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $directed_movie->getTitle() . '">
                 <input type="hidden" name="entry_type" value="movie">
@@ -263,9 +266,9 @@ class View
             echo '<ul class="list-group">';
             foreach ($directed_series as $directed_s) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $directed_s->getTitle()
-                . '<input value="Serie entfernen" class="btn btn-danger" name="remove_series_from_director" type="submit" style="float:right;">
-                <input value="Details" class="btn btn-info" name="entry_details" type="submit" style="float:right;">
+                echo '<li class="list_grid"><span class="name">' . $directed_s->getTitle()
+                . '</span><input value="Serie entfernen" class="button_delete" name="remove_series_from_director" type="submit" style="float:right;">
+                <input value="Details" class="button_details" name="entry_details" type="submit" style="float:right;">
                 <input type="hidden" name="entry_details_id" value="' . $directed_s->getID() . '">
                 <input type="hidden" name="entry_details_title" value="' . $directed_s->getTitle() . '">
                 <input type="hidden" name="entry_type" value="series">
@@ -312,19 +315,19 @@ class View
         }
         if ($type == 'series') {
             echo '<h1 id="title_heading"><span id="title_series">' . $details->getTitle()
-            . '</span>&nbsp<button id="edit_series" class="btn btn-warning">Bearbeiten</button></h1>';
+            . '</span>&nbsp<button id="edit_series"><img alt="Bearbeiten" src="../src/images/1x/baseline_create_black_18dp.png"></button></h1>';
         } elseif ($type == 'movie') {
             echo '<h1 id="title_heading"><span id="title_movie">' . $details->getTitle()
-            . '</span>&nbsp<button id="edit_movie" class="btn btn-warning">Bearbeiten</button></h1>';
+            . '</span>&nbsp<button id="edit_movie"><img alt="Bearbeiten" src="../src/images/1x/baseline_create_black_18dp.png"></button></h1>';
         }
         echo '<ul class="list-group">';
         ob_start();
         if (isset($actors)) {
             foreach ($actors as $actor) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $actor->getName()
-                . '<input value="Löschen" class="btn btn-danger" name="remove_actor" type="submit" style="float:right;">
-                <input value="Details" class="btn btn-info" name="person_details" type="submit" style="float:right;">
+                echo '<li class="list_grid"><span class="name">' . $actor->getName()
+                . '</span><input value="Löschen" class="button_delete" name="remove_actor" type="submit" style="float:right;">
+                <input value="Details" class="button_details" name="person_details" type="submit" style="float:right;">
                 <input name="person_details_id" value="' . $actor->getID() . '" type="hidden" style="float:right;">
                 <input name="person_details_name" value="' . $actor->getName() . '" type="hidden" style="float:right;">
                 <input name="person_details_bio" value="' . $actor->getBio() . '" type="hidden" style="float:right;">
@@ -377,9 +380,9 @@ class View
         if (isset($directors)) {
             foreach ($directors as $director) {
                 echo '<form method="post">';
-                echo '<li class="list-group-item">' . $director->getName()
-                . '<input value="Löschen" class="btn btn-danger" name="remove_director" type="submit" style="float:right;">
-                <input value="Details" class="btn btn-info" name="director_details" type="submit" style="float:right;">
+                echo '<li class="list_grid"><span class="name">' . $director->getName()
+                . '</span><input value="Löschen" class="button_delete" name="remove_director" type="submit" style="float:right;">
+                <input value="Details" class="button_details" name="director_details" type="submit" style="float:right;">
                 <input name="director_details_id" value="' . $director->getID() . '" type="hidden" style="float:right;">
                 <input name="director_details_name" value="' . $director->getName() . '" type="hidden" style="float:right;">
                 <input name="director_details_bio" value="' . $director->getBio() . '" type="hidden" style="float:right;">

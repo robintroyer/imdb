@@ -1,0 +1,222 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+#main {
+  display: grid;
+}
+#main form {
+  text-align: center;
+  align-self: center;
+}
+#main input[type=submit] {
+  border-radius: 8px;
+  border: 1px solid lightgrey;
+  background-color: #eee;
+  height: 25px;
+  width: 100px;
+}
+#main input[type=submit]:hover {
+  background-color: #ddd;
+}
+#main input[type=submit]:focus {
+  outline: none;
+}
+#main option {
+  line-height: 30px;
+}
+
+.label {
+  line-height: 60px;
+}
+
+.input_label {
+  line-height: 30px;
+}
+
+.main_input, .main_input_select {
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 2px 5px 2px 5px;
+}
+.main_input:focus, .main_input_select:focus {
+  outline: none;
+}
+
+.button_nav #button_grid {
+  display: grid;
+}
+.button_nav input[type=submit], .button_nav button {
+  border: 1px solid lightgrey;
+  background-color: #eee;
+  height: 50px;
+}
+.button_nav input[type=submit]:hover, .button_nav button:hover {
+  background-color: #ddd;
+}
+
+ul {
+  padding-left: 7px;
+}
+
+.list_grid {
+  display: grid;
+}
+.list_grid input {
+  border: 1px solid lightgrey;
+}
+.list_grid .button_details {
+  background-color: #e2e297;
+  grid-area: 1/2/span 1/span 1;
+}
+.list_grid .button_details:hover {
+  background-color: #d7d76f;
+}
+.list_grid .button_delete {
+  background-color: #cf7d7d;
+  grid-area: 1/3/span 1/span 1;
+}
+.list_grid .button_delete:hover {
+  background-color: #c15858;
+}
+
+#edit_series, #edit_movie, #edit_person {
+  height: 30px;
+}
+
+#edit_form input[type=text] {
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 35px;
+}
+#edit_form input[type=text]:focus {
+  outline: none;
+}
+
+#new_actor,
+#new_director,
+#new_person,
+#existing_person,
+#new_form input[type=submit],
+#select_form input[type=submit],
+#new_movie,
+#new_series,
+#new_directed_movie,
+#new_directed_series,
+#new_movie_button,
+#existing_movie,
+#new_series_button,
+#existing_series,
+#new_directed_movie_button,
+#existing_directed_movie,
+#new_directed_series_button,
+#existing_directed_series,
+#edit_div input[type=submit],
+#new_person_director,
+#existing_person_director {
+  background-color: #98c098;
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+  height: 35px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-top: 5px;
+}
+#new_actor:hover,
+#new_director:hover,
+#new_person:hover,
+#existing_person:hover,
+#new_form input[type=submit]:hover,
+#select_form input[type=submit]:hover,
+#new_movie:hover,
+#new_series:hover,
+#new_directed_movie:hover,
+#new_directed_series:hover,
+#new_movie_button:hover,
+#existing_movie:hover,
+#new_series_button:hover,
+#existing_series:hover,
+#new_directed_movie_button:hover,
+#existing_directed_movie:hover,
+#new_directed_series_button:hover,
+#existing_directed_series:hover,
+#edit_div input[type=submit]:hover,
+#new_person_director:hover,
+#existing_person_director:hover {
+  background-color: #78ad78;
+}
+#new_actor:focus,
+#new_director:focus,
+#new_person:focus,
+#existing_person:focus,
+#new_form input[type=submit]:focus,
+#select_form input[type=submit]:focus,
+#new_movie:focus,
+#new_series:focus,
+#new_directed_movie:focus,
+#new_directed_series:focus,
+#new_movie_button:focus,
+#existing_movie:focus,
+#new_series_button:focus,
+#existing_series:focus,
+#new_directed_movie_button:focus,
+#existing_directed_movie:focus,
+#new_directed_series_button:focus,
+#existing_directed_series:focus,
+#edit_div input[type=submit]:focus,
+#new_person_director:focus,
+#existing_person_director:focus {
+  outline: none;
+}
+
+@media only screen and (max-width: 425px) {
+  #main {
+    grid-template-columns: 1fr;
+  }
+
+  .button_nav #button_grid {
+    grid-template-columns: 1fr;
+  }
+  .button_nav input[type=submit] {
+    display: none;
+  }
+  .button_nav .enabled input[type=submit] {
+    display: block;
+  }
+  .button_nav button {
+    width: 100%;
+    background-color: #eee;
+  }
+  .button_nav button:focus {
+    outline: none;
+    background-color: #eee;
+  }
+
+  .list_grid {
+    grid-template-columns: 3fr 1fr 1fr;
+  }
+}
+@media only screen and (min-width: 426px) {
+  #main {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .button_nav #button_grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .button_nav button {
+    display: none;
+  }
+
+  .list_grid {
+    grid-template-columns: 5fr 1fr 1fr;
+    height: 30px;
+  }
+  .list_grid .name {
+    align-self: center;
+  }
+}
